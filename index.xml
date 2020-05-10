@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>肉機械の制作室</title>
+    <link>https://NikuKikai.github.io/</link>
+    <description>Recent content on 肉機械の制作室</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sun, 29 Sep 2019 15:31:37 +0900</lastBuildDate>
+    
+	<atom:link href="https://NikuKikai.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>コマと時間</title>
+      <link>https://NikuKikai.github.io/posts/komaandtime/</link>
+      <pubDate>Sun, 29 Sep 2019 15:31:37 +0900</pubDate>
+      
+      <guid>https://NikuKikai.github.io/posts/komaandtime/</guid>
+      <description>漫画ネームにおいての「コマ」は、時空のキャプチャーと自然に考えられる。その時間属性は、内容物（物語の時間）と読者の読み（リアルの時間）ともに</description>
+    </item>
+    
+  </channel>
+</rss>
