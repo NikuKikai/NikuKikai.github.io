@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>絵 on 肉機械の制作室</title>
-    <link>https://NikuKikai.github.io/categories/%E7%B5%B5/</link>
-    <description>Recent content in 絵 on 肉機械の制作室</description>
+    <title>Portfolios on 肉機械の制作室</title>
+    <link>https://NikuKikai.github.io/portfolio/</link>
+    <description>Recent content in Portfolios on 肉機械の制作室</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
     <lastBuildDate>Sun, 29 Sep 2019 15:31:37 +0900</lastBuildDate>
     
-	<atom:link href="https://NikuKikai.github.io/categories/%E7%B5%B5/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://NikuKikai.github.io/portfolio/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
