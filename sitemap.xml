@@ -3,8 +3,43 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://NikuKikai.github.io/about/</loc>
+    <lastmod>2020-05-11T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://NikuKikai.github.io/</loc>
+    <lastmod>2020-05-11T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://NikuKikai.github.io/posts/croquis2020/</loc>
+    <lastmod>2020-05-10T23:43:00+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://NikuKikai.github.io/categories/</loc>
-    <lastmod>2019-09-29T15:31:37+09:00</lastmod>
+    <lastmod>2020-05-09T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://NikuKikai.github.io/posts/croquis2020/0509/</loc>
+    <lastmod>2020-05-09T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://NikuKikai.github.io/categories/%E7%B5%B5/</loc>
+    <lastmod>2020-05-09T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://NikuKikai.github.io/posts/croquis2020/0428/</loc>
+    <lastmod>2020-04-28T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://NikuKikai.github.io/posts/croquis2020/0419/</loc>
+    <lastmod>2020-04-19T00:00:00+09:00</lastmod>
   </url>
   
   <url>
@@ -15,21 +50,6 @@
   <url>
     <loc>https://NikuKikai.github.io/posts/komaandtime/</loc>
     <lastmod>2019-09-29T15:31:37+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://NikuKikai.github.io/categories/%E7%B5%B5/</loc>
-    <lastmod>2019-09-29T15:31:37+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://NikuKikai.github.io/</loc>
-    <lastmod>2019-09-29T15:31:37+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://NikuKikai.github.io/about/</loc>
-    <priority>0</priority>
   </url>
   
   <url>

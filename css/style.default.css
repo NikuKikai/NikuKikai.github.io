@@ -319,7 +319,7 @@ SIDEBAR + RIGHT COLUMN
 #sidebar {
   padding-top: 40px;
   max-width: 300px;
-  min-width: 280px;
+  height: 100%;
 }
 .sidebar-content {
     z-index: 0;
@@ -410,6 +410,13 @@ SIDEBAR + RIGHT COLUMN
 .sidebar-menu li:hover:before {
   color: #ef5285;
 }
+
+
+.post-div {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 .content-column {
   padding-top: 40px;
 }
