@@ -318,6 +318,8 @@ SIDEBAR + RIGHT COLUMN
 */
 #sidebar {
   padding-top: 40px;
+  max-width: 300px;
+  min-width: 280px;
 }
 .sidebar-content {
     z-index: 0;
@@ -329,27 +331,54 @@ SIDEBAR + RIGHT COLUMN
     padding-right: 18px;
   }
 }
+
 .sidebar-heading {
-  font-size: 18px;
+  text-align: center;
+  font-size: 26px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  border-bottom: solid 1px #444;
 }
 .sidebar-heading a {
-  color: #000;
+  color: #333;
   text-decoration: none;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
 .sidebar-heading a:hover {
-  border-bottom: dotted 1px #ef5285;
   color: #000;
   text-decoration: none;
 }
-.sidebar-p {
-  color: #999999;
-  font-size: 14px;
+
+.sidebar-info-img {
+  padding-bottom: 10px;
+  border-radius: 50%;
+  align-self: center;
 }
+.sidebar-info-author {
+  text-align: center;
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.sidebar-info-description {
+  color: #777777;
+  font-size: 14px;
+  margin-left: 10px;
+  margin-bottom: 0px;
+}
+
+.sidebar-saparate {
+  border-bottom: dotted 1px #888;
+  margin-top: 14px;
+  margin-bottom: 24px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+
 .sidebar-menu {
   list-style-type: none;
   padding-left: 20px;
@@ -2112,3 +2141,4 @@ a.list-group-item.active > .badge,
 .nav-pills > li > a > .badge {
   margin-left: 3px;
 }
+
