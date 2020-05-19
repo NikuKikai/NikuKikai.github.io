@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
@@ -13,22 +13,27 @@
   </url>
   
   <url>
+    <loc>https://NikuKikai.github.io/categories/</loc>
+    <lastmod>2020-05-10T23:43:00+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://NikuKikai.github.io/posts/croquis2020/</loc>
     <lastmod>2020-05-10T23:43:00+09:00</lastmod>
   </url>
   
   <url>
-    <loc>https://NikuKikai.github.io/categories/</loc>
-    <lastmod>2020-05-09T00:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://NikuKikai.github.io/posts/croquis2020/0509/</loc>
-    <lastmod>2020-05-09T00:00:00+09:00</lastmod>
+    <loc>https://NikuKikai.github.io/posts/</loc>
+    <lastmod>2020-05-10T23:43:00+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://NikuKikai.github.io/categories/%E7%B5%B5/</loc>
+    <lastmod>2020-05-10T23:43:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://NikuKikai.github.io/posts/croquis2020/0509/</loc>
     <lastmod>2020-05-09T00:00:00+09:00</lastmod>
   </url>
   
@@ -40,11 +45,6 @@
   <url>
     <loc>https://NikuKikai.github.io/posts/croquis2020/0419/</loc>
     <lastmod>2020-04-19T00:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://NikuKikai.github.io/posts/</loc>
-    <lastmod>2019-09-29T15:31:37+09:00</lastmod>
   </url>
   
   <url>
