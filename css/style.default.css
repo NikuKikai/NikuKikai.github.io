@@ -317,16 +317,17 @@ SIDEBAR + RIGHT COLUMN
 =====================
 */
 #sidebar {
-  margin-top: 15px;
+  margin-top: 10px;
   padding-top: 20px;
-  margin-right: 10px;
-  max-width: 300px;
+  margin-right: 0px;
+  max-width: 320px;
   height: 100%;
-  border-right: solid 1px #bbb;
+  padding-right: 25px;
+  /* border-right: solid 1px #bbb;
   border-top: solid 1px #bbb;
   border-bottom: solid 1px #bbb;
   border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-right-radius: 20px; */
   display: unset;
 }
 .sidebar-content {
@@ -345,7 +346,8 @@ SIDEBAR + RIGHT COLUMN
   font-size: 26px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  border-bottom: solid 1px #444;
+  margin-bottom: 32px;
+  /* border-bottom: solid 1px #444; */
 }
 .sidebar-heading a {
   color: #333;
