@@ -444,11 +444,14 @@ SIDEBAR + RIGHT COLUMN
 }
 
 
+.portfolio-title {
+  text-align: center;
+  margin-bottom: 18px;
+}
 .portfolio-title-div {
   text-align: center;
   border-top: solid 5px #ddd;
   border-bottom: solid 5px #ddd;
-  margin-bottom: 20px;
   margin-left: 10%;
   margin-right: 10%;
   padding-bottom: 2px;
@@ -456,11 +459,20 @@ SIDEBAR + RIGHT COLUMN
 .portfolio-title-div a {
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
   color: #999;
 }
 .portfolio-title-div a:hover {
+  text-decoration: none;
+}
+.portfolio-title-date {
+  text-align: right;
+  padding-right: 10%;
+}
+.portfolio-title-date a{
+  font-size: 14px;
+  color: #ccc;
   text-decoration: none;
 }
 
@@ -935,12 +947,12 @@ a:active {
   letter-spacing: 0.1em;
 }
 .box-masonry h4 a {
-  color: #000;
+  color: #333;
   border-bottom: solid 1px transparent;
 }
 .box-masonry h4 a:hover {
   border-bottom: dotted 1px #ef5285;
-  color: #000;
+  color: #333;
   text-decoration: none;
 }
 .box-masonry .box-masonry-text {
