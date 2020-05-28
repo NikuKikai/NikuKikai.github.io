@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 肉機械の制作室</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 10 May 2020 23:43:00 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 27 May 2020 00:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://NikuKikai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Gaze</title>
+      <link>https://NikuKikai.github.io/posts/gaze/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0900</pubDate>
+      
+      <guid>https://NikuKikai.github.io/posts/gaze/</guid>
+      <description>私は自分をただの通り過ぎた者にしたい。</description>
+    </item>
     
     <item>
       <title>コマと時間</title>

@@ -446,7 +446,7 @@ SIDEBAR + RIGHT COLUMN
 
 .portfolio-title {
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 36px;
 }
 .portfolio-title-div {
   text-align: center;
@@ -929,7 +929,7 @@ a:active {
   margin-left: -15px;
 }
 .box-masonry {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.356);
   margin-bottom: 30px;
   position: relative;
   box-shadow: 0 0 5px #ccc;
@@ -957,6 +957,7 @@ a:active {
 }
 .box-masonry .box-masonry-text {
   padding: 15px 20px 15px;
+  background-color: #fff;
 }
 .box-masonry .box-masonry-text p {
   color: #999999;
@@ -1018,7 +1019,7 @@ a:active {
   display: block;
   position: relative;
   min-height: 100px;
-  background: #ccc;
+  background: rgba(255, 255, 255, 0);
 }
 .box-masonry .box-masonry-image.with-hover-overlay:before {
   display: block;
