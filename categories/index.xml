@@ -6,10 +6,19 @@
     <description>Recent content in Categories on 肉機械の制作室</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Wed, 27 May 2020 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 14 Jun 2020 19:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://NikuKikai.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>文</title>
+      <link>https://NikuKikai.github.io/categories/%E6%96%87/</link>
+      <pubDate>Sun, 14 Jun 2020 19:00:00 +0900</pubDate>
+      
+      <guid>https://NikuKikai.github.io/categories/%E6%96%87/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>絵</title>
