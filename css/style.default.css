@@ -446,6 +446,9 @@ SIDEBAR + RIGHT COLUMN
 
 .portfolio-title {
   text-align: center;
+  margin-bottom: 20px;
+}
+.portfolio-title-margin {
   margin-bottom: 36px;
 }
 .portfolio-title-div {
@@ -475,11 +478,17 @@ SIDEBAR + RIGHT COLUMN
   color: #ccc;
   text-decoration: none;
 }
+.portfolio-img {
+  margin: 0 auto;
+}
 
 
 .post-div {
   max-width: 1000px;
   margin: 0 auto;
+}
+.content-column-content img {
+  max-width: 600px;
 }
 
 .content-column {
