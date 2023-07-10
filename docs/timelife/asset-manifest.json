@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/time-life/static/css/main.4f4e6e68.css",
+    "main.js": "/time-life/static/js/main.77b65770.js",
+    "index.html": "/time-life/index.html",
+    "main.4f4e6e68.css.map": "/time-life/static/css/main.4f4e6e68.css.map",
+    "main.77b65770.js.map": "/time-life/static/js/main.77b65770.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4f4e6e68.css",
+    "static/js/main.77b65770.js"
+  ]
+}

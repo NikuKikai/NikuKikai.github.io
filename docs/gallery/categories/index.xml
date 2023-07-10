@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on 肉機械の制作室</title>
+    <link>https://NikuKikai.github.io/categories/</link>
+    <description>Recent content in Categories on 肉機械の制作室</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sun, 13 Nov 2022 22:00:00 +0900</lastBuildDate><atom:link href="https://NikuKikai.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>絵</title>
+      <link>https://NikuKikai.github.io/categories/%E7%B5%B5/</link>
+      <pubDate>Sun, 13 Nov 2022 22:00:00 +0900</pubDate>
+      
+      <guid>https://NikuKikai.github.io/categories/%E7%B5%B5/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>文</title>
+      <link>https://NikuKikai.github.io/categories/%E6%96%87/</link>
+      <pubDate>Sun, 14 Jun 2020 19:00:00 +0900</pubDate>
+      
+      <guid>https://NikuKikai.github.io/categories/%E6%96%87/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
