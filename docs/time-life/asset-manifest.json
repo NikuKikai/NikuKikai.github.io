@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/time-life/static/css/main.4f4e6e68.css",
-    "main.js": "/time-life/static/js/main.77b65770.js",
+    "main.css": "/time-life/static/css/main.d3a8c2f5.css",
+    "main.js": "/time-life/static/js/main.f92b910d.js",
     "index.html": "/time-life/index.html",
-    "main.4f4e6e68.css.map": "/time-life/static/css/main.4f4e6e68.css.map",
-    "main.77b65770.js.map": "/time-life/static/js/main.77b65770.js.map"
+    "main.d3a8c2f5.css.map": "/time-life/static/css/main.d3a8c2f5.css.map",
+    "main.f92b910d.js.map": "/time-life/static/js/main.f92b910d.js.map"
   },
   "entrypoints": [
-    "static/css/main.4f4e6e68.css",
-    "static/js/main.77b65770.js"
+    "static/css/main.d3a8c2f5.css",
+    "static/js/main.f92b910d.js"
   ]
 }
