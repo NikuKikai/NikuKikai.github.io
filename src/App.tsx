@@ -18,8 +18,8 @@ engine.gravity.scale = -0.00015;
 
 
 const ground = Bodies.rectangle(2000, 800, 4000, 100, {isStatic: true});
-const leftWall = Bodies.rectangle(0, 1000, 20, 2000, {isStatic: true});
-const rightWall = Bodies.rectangle(1000, 1000, 20, 2000, {isStatic: true});
+const leftWall = Bodies.rectangle(-40, 1000, 100, 2000, {isStatic: true});
+const rightWall = Bodies.rectangle(1000, 1000, 100, 2000, {isStatic: true});
 World.add(engine.world, [ground, leftWall, rightWall]);
 
 // const circle = Bodies.circle(401, 200, 20);
@@ -61,8 +61,9 @@ type PhysicDivProps = {
 var physicDivYLst = 10;
 var physicDivXLst = 10;
 function randPhysicDivProps(){
-    let x = Math.random() * (window.innerWidth-200) + 10;
-    while (Math.abs(x-physicDivXLst) < 300) x = Math.random() * (window.innerWidth-200) + 10;
+    const randX = () => window.innerWidth/2 + (Math.random()-1/2) * Math.min(window.innerWidth-200, window.innerHeight) - 100;
+    let x = randX();
+    while (Math.abs(x-physicDivXLst) < 300) x = randX();
     const y = window.innerHeight + physicDivYLst;
     physicDivXLst = x;
     physicDivYLst += Math.random() * 50 + 50;
@@ -71,7 +72,7 @@ function randPhysicDivProps(){
         fposx: x + Math.random(),
         fposy: y,
         fx: 0,
-        fy: (Math.random()-1) * 0.01,
+        fy: (Math.random()-1) * 0.1,
         margin: 2,
     }
 }
@@ -108,7 +109,7 @@ function PhysicDiv({x0, y0, fposx, fposy, fx, fy, margin, style, children} : Pro
                 Body.applyForce(body, {x: fposx, y: fposy}, {x: fx, y: fy});
             Events.on(engine, 'afterUpdate', onEngineUpdated)
 
-        }, 35);
+        }, 66);
 
         return () => {
             if (bodyRef.current)
@@ -144,7 +145,7 @@ function App() {
     useEffect(() => {
         // Init resize event
         const onresize = () => {
-            Body.setPosition(rightWall, {x: window.innerWidth, y: 1000});
+            Body.setPosition(rightWall, {x: window.innerWidth+40, y: 1000});
             Body.setPosition(ground, {x: 2000, y: window.innerHeight*0.6-50+5});  // collider is 5px below water surface
         };
         window.addEventListener('resize', () => {
@@ -223,7 +224,7 @@ function App() {
                     <a href='./gallery'>Gallery</a>
                 </PhysicDiv>
                 <PhysicDiv {...randPhysicDivProps()} style={{fontSize: '3em'}}>
-                    <a href='https://miyehn.me/blog/'>Miyehn</a>
+                    <a href='https://miyehn.me/blog/'><span style={{fontSize: '0.6em'}}>🤝</span>Miyehn</a>
                 </PhysicDiv>
                 <PhysicDiv {...randPhysicDivProps()} style={{fontSize: '3em'}}>
                     <a href='https://twitter.com/NikuKiKai'>Twitter</a>
