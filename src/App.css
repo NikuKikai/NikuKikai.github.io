@@ -1,0 +1,32 @@
+@font-face {
+  font-family: 'diamonda';
+  src: url(./DiamondaRegular-GO00m.ttf); /* https://www.fontspace.com/diamonda-font-f57499 */
+}
+
+.App {
+  text-align: center;
+  overflow: hidden;
+
+  font-family: 'diamonda';
+  font-weight: bolder;
+}
+
+.physicDiv {
+  position: absolute;
+  top: 10000px;
+  transform-origin: 0 0;  /* fallback */
+
+  background-color: rgba(238, 238, 221, 0.75);
+  border-radius: 5px;
+  padding: 12px 16px 0px 8px;
+  font-size: 2em;
+  white-space: nowrap;
+}
+
+.physicDiv a {
+  text-decoration: none;
+}
+
+.physicDiv a:link, .physicDiv a:visited {
+  color: black;
+}
