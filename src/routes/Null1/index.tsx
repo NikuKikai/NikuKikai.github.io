@@ -127,6 +127,12 @@ export default function AppNone1() {
 
                 const rotY = i%2===0? (i<=currPage? 0: -180): (i<=currPage? 180: 0);
 
+                let delay = 0;
+                if (toOrFrom14) {
+                    delay = (Math.abs(7 - Math.ceil(i/2)*2)-1) /10;  // [0, 0.6]
+                    if (!isImg14Visible) delay = 0.6 - delay;
+                }
+
                 return (
                     <div
                         className='comic-page'
@@ -137,7 +143,7 @@ export default function AppNone1() {
                             transformOrigin: i%2===0? 'left': 'right',
                             transform: (isImg14Visible?`translateY(150%) `:'') + `translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg)`,
                             transitionTimingFunction: isImg14Visible? 'ease-in': 'ease-out',
-                            transitionDelay: toOrFrom14? `${Math.abs(7 - Math.ceil(i/2)*2)/10}s`: '0s',
+                            transitionDelay: `${delay}s`,
                             transitionDuration: toOrFrom14? '0.8s': '2s',
                         }}
                     >
