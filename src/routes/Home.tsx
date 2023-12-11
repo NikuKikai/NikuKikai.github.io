@@ -194,6 +194,9 @@ export default function Home() {
                     <Link to='./null1' target="_blank" rel="noopener noreferrer">「」1</Link>
                 </PhysicDiv>
                 <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
+                    <Link to='./null2' target="_blank" rel="noopener noreferrer">「」2</Link>
+                </PhysicDiv>
+                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
                     <a href='./gallery'>Gallery</a>
                 </PhysicDiv>
 
