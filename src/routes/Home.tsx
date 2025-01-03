@@ -191,10 +191,13 @@ export default function Home() {
                     <a href='./time-life'>Time-Life</a>
                 </PhysicDiv>
                 <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
-                    <Link to='./null1' target="_blank" rel="noopener noreferrer">「」1</Link>
+                    <Link to='./null1' target="_blank" rel="noopener noreferrer">Comic「」1</Link>
                 </PhysicDiv>
                 <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
-                    <Link to='./null2' target="_blank" rel="noopener noreferrer">「」2</Link>
+                    <Link to='./null2' target="_blank" rel="noopener noreferrer">Comic「」2</Link>
+                </PhysicDiv>
+                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
+                    <Link to='./Q' target="_blank" rel="noopener noreferrer">Comic「Q」</Link>
                 </PhysicDiv>
                 <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
                     <a href='./gallery'>Gallery</a>
