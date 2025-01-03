@@ -1,5 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState, PropsWithChildren } from 'react';
 import { useWindowSize } from "@react-hook/window-size";
+import MangaViewer from "react-manga-viewer";
+
 
 import './index.css';
 
@@ -21,8 +23,12 @@ const pages = [
     'data/null1/1-13.png',
 ];
 
+export default function AppNull1() {
+//     const [width, height] = useWindowSize();
+//     return <MangaViewer width={width} height={height} urls={pages}></MangaViewer>
+// }
 
-export default function AppNone1() {
+// export function AppNull1() {
     const [width, height] = useWindowSize();
     const [currPage, setCurrPage] = useState(0);
     const [imgW, setImgW] = useState(0);
