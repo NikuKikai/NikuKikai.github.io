@@ -1,24 +1,23 @@
-import React, { useEffect, useLayoutEffect, useRef, useState, PropsWithChildren } from 'react';
-import Matter, { Engine, Runner, Events, Body, Bodies, World } from 'matter-js';
-import { Link } from 'react-router-dom';
+'use client';
 
-// https://pensoza.com/
-import toolsImg from '../imgs/tools.png';
-import brainImg from '../imgs/brain.png';
+import React, { useEffect, useLayoutEffect, useRef, useState, PropsWithChildren } from 'react';
+import { Engine, Runner, Events, Body, Bodies, World } from 'matter-js';
+import { useRouter } from 'next/navigation';
+
+import './globals.css';
+import styles from './home.module.css';
 
 
 type PhysicDivProps = {
     engine: Engine;
-    x0: number, y0: number,
-    fposx?: number, fposy?: number,
-    fx?: number, fy?: number,
     margin?: number,
     style?: React.CSSProperties,
+    onClick?: ()=>void,
 }
 
 
-var physicDivYLst = 10;
-var physicDivXLst = 10;
+let physicDivYLst = 10;
+let physicDivXLst = 10;
 function randPhysicDivProps(){
     const randX = () => window.innerWidth/2 + (Math.random()-1/2) * Math.min(window.innerWidth-200, window.innerHeight) - 100;
     let x = randX();
@@ -32,14 +31,13 @@ function randPhysicDivProps(){
         fposy: y,
         fx: 0,
         fy: (Math.random()-1) * 0.1,
-        margin: 2,
     }
 }
 
 
-function PhysicDiv({engine, x0, y0, fposx, fposy, fx, fy, margin, style, children} : PropsWithChildren<PhysicDivProps>) {
+function PhysicDiv({engine, margin, style, children, onClick} : PropsWithChildren<PhysicDivProps>) {
     const divRef = useRef<HTMLDivElement>(null);
-    const bodyRef = useRef<Body>();
+    const bodyRef = useRef<Body>(null);
     const [pos, setPos] = useState<{x: number, y: number}>({x: 0, y: 0});
     const [deg, setDeg] = useState<number>(0);
 
@@ -52,12 +50,13 @@ function PhysicDiv({engine, x0, y0, fposx, fposy, fx, fy, margin, style, childre
     };
 
     useEffect(() => {
+        const args = randPhysicDivProps()
 
         // Create body
         setTimeout(() => {  // NOTE divRef.current!.clientWidth is sometimes INCORRECT
             const w = divRef.current!.clientWidth + margin!*2;
             const h = divRef.current!.clientHeight + margin!*2;
-            const x = x0+w/2; const y = y0+h/2;
+            const x = args.x0+w/2; const y = args.y0+h/2;
             const body = Bodies.fromVertices(x, y, [[{x:0, y:0}, {x:w, y:0}, {x:w, y:h}, {x:0, y:h}]]);
             bodyRef.current = body;
 
@@ -65,8 +64,8 @@ function PhysicDiv({engine, x0, y0, fposx, fposy, fx, fy, margin, style, childre
             body.frictionAir = 0.002 + Math.random() * 0.02;
             // body.frictionStatic = 1;
 
-            if (fposx !== undefined && fposy !== undefined && fx !== undefined && fy !== undefined)
-                Body.applyForce(body, {x: fposx, y: fposy}, {x: fx, y: fy});
+            if (args.fposx !== undefined && args.fposy !== undefined && args.fx !== undefined && args.fy !== undefined)
+                Body.applyForce(body, {x: args.fposx, y: args.fposy}, {x: args.fx, y: args.fy});
             Events.on(engine, 'afterUpdate', onEngineUpdated)
 
         }, 66);
@@ -83,14 +82,16 @@ function PhysicDiv({engine, x0, y0, fposx, fposy, fx, fy, margin, style, childre
 
 
     return (
-        <div ref={divRef} key={bodyRef.current?.id} className='physicDiv'
+        <div ref={divRef} key={bodyRef.current?.id} className={styles.physicDiv}
             style={{
                 left: pos.x+'px',
                 top: pos.y+'px',
                 transform: 'rotate('+deg+'deg)',
                 transformOrigin: '-' + margin + 'px -' + margin + 'px',
+                cursor: 'pointer',
                 ...style
             }}
+            onClick={onClick}
         >
             {children}
         </div>
@@ -99,11 +100,20 @@ function PhysicDiv({engine, x0, y0, fposx, fposy, fx, fy, margin, style, childre
 
 
 export default function Home() {
-    const [bodies, setBodies] = useState<Body[]>([]);
+    const router = useRouter();
+    // const [bodies, setBodies] = useState<Body[]>([]);
 
     const engineRef = useRef<Engine>(Engine.create());
     const runnerRef = useRef<Runner>(Runner.create());
 
+    useEffect(() => {
+        if (window.location.hash) {
+            const url = window.location.href.replace('/#', '');
+            // Redirect to the corresponding new route
+            console.log(window.location, url);
+            router.replace(url);
+        }
+    }, []);
 
     useEffect(() => {
         const engine = engineRef.current;
@@ -125,7 +135,7 @@ export default function Home() {
         // Init physics
         Runner.run(runner, engine);
         Events.on(engine, 'afterUpdate', () => {
-            setBodies([...Matter.Composite.allBodies(engine.world)]);
+            // setBodies([...Matter.Composite.allBodies(engine.world)]);
         })
         return () => {  // on unmount
             window.removeEventListener('resize', onresize);
@@ -147,7 +157,7 @@ export default function Home() {
 
             {/* Tools */}
             <div style={{
-                backgroundImage: `url(${toolsImg})`,
+                backgroundImage: `url(/home/tools.png)`,
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'contain',
                 backgroundPosition: 'center top 0',
@@ -156,7 +166,7 @@ export default function Home() {
 
             {/* Tools */}
             <div style={{
-                backgroundImage: `url(${brainImg})`,
+                backgroundImage: `url(/home/brain.png)`,  // https://pensoza.com/
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'contain',
                 backgroundPosition: 'center bottom 0',
@@ -187,37 +197,33 @@ export default function Home() {
             </svg> */}
 
             <div>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}}>
                     <a href='./time-life'>Time-Life</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
-                    <Link to='./null1' target="_blank" rel="noopener noreferrer">Comic「」1</Link>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}} onClick={()=>router.push('/null1')}>
+                    📖「」1
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
-                    <Link to='./null2' target="_blank" rel="noopener noreferrer">Comic「」2</Link>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}} onClick={()=>router.push('/null2')}>
+                    📖「」2
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
-                    <Link to='./Q' target="_blank" rel="noopener noreferrer">Comic「Q」</Link>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}} onClick={()=>router.push('/Q')}>
+                    📖「Q」
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '5em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}}>
                     <a href='./gallery'>Gallery</a>
                 </PhysicDiv>
 
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '3em'}}>
-                    <a href='https://twitter.com/NikuKiKai'>Twitter</a>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
+                    <a href='https://twitter.com/NikuKiKai'>X</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '3em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
                     <a href='https://weibo.com/u/6010761304'>Weibo</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '3em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
                     <a href='https://photohito.com/user/159218/'>Photos</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '3em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
                     <a href='https://nikukikai.hatenablog.jp/'>Hatena(chn)</a>
-                </PhysicDiv>
-
-                <PhysicDiv engine={engineRef.current} {...randPhysicDivProps()} style={{fontSize: '3em'}}>
-                    <a href='https://miyehn.me/blog/'><span style={{fontSize: '0.6em'}}>🤝</span>Miyehn</a>
                 </PhysicDiv>
             </div>
         </div>
