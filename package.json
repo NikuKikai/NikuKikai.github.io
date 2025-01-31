@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "serve": "npx serve@latest out",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

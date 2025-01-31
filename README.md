@@ -1,9 +1,12 @@
 
+Dev (has Fast Refresh rebuilding overhead):
+`npm run dev`
+
 Build:
 `npm run build`
 
-Deploy (temporally):
-Copy files in /build to /docs
+Dev (without overhead, run after build)
+`npx serve@latest out` (`npm run serve` for short)
 
 Deploy (future):
 `npm run deploy`.

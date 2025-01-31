@@ -25,3 +25,17 @@ body {
   background-color: #eed;
   overflow: hidden;
 }
+
+@font-face {
+  font-family: 'diamonda';
+  src: url(/DiamondaRegular-GO00m.ttf);
+  /* https://www.fontspace.com/diamonda-font-f57499 */
+}
+
+.App {
+  text-align: center;
+  overflow: hidden;
+
+  font-family: 'diamonda';
+  font-weight: bolder;
+}

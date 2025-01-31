@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef, useState, PropsWithChildren } from 'react';
+import React from 'react';
 import { Engine, Runner, Events, Body, Bodies, World } from 'matter-js';
 import { useRouter } from 'next/navigation';
+// import Link from 'next/link';
 
 import './globals.css';
 import styles from './home.module.css';
@@ -35,11 +36,11 @@ function randPhysicDivProps() {
 }
 
 
-function PhysicDiv({ engine, margin, style, children, onClick }: PropsWithChildren<PhysicDivProps>) {
-    const divRef = useRef<HTMLDivElement>(null);
-    const bodyRef = useRef<Body>(null);
-    const [pos, setPos] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-    const [deg, setDeg] = useState<number>(0);
+function PhysicDiv({ engine, margin, style, children, onClick }: React.PropsWithChildren<PhysicDivProps>) {
+    const divRef = React.useRef<HTMLDivElement>(null);
+    const bodyRef = React.useRef<Body>(null);
+    const [pos, setPos] = React.useState<{ x: number, y: number }>({ x: 0, y: 0 });
+    const [deg, setDeg] = React.useState<number>(0);
 
     if (margin === undefined) margin = 0;
 
@@ -49,7 +50,7 @@ function PhysicDiv({ engine, margin, style, children, onClick }: PropsWithChildr
         setDeg(bodyRef.current!.angle * 180 / Math.PI);
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         const args = randPhysicDivProps()
 
         // Create body
@@ -76,10 +77,6 @@ function PhysicDiv({ engine, margin, style, children, onClick }: PropsWithChildr
         }
     }, []);
 
-    useLayoutEffect(() => {
-        // console.log('lo', divRef.current!.clientWidth, children)
-    }, []);
-
 
     return (
         <div ref={divRef} key={bodyRef.current?.id} className={styles.physicDiv}
@@ -103,10 +100,10 @@ export default function Home() {
     const router = useRouter();
     // const [bodies, setBodies] = useState<Body[]>([]);
 
-    const engineRef = useRef<Engine>(Engine.create());
-    const runnerRef = useRef<Runner>(Runner.create());
+    const engineRef = React.useRef<Engine>(Engine.create());
+    const runnerRef = React.useRef<Runner>(Runner.create());
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (window.location.hash) {
             const url = window.location.href.replace('/#', '');
             // Redirect to the corresponding new route
@@ -115,7 +112,7 @@ export default function Home() {
         }
     }, [router]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         const engine = engineRef.current;
         const runner = runnerRef.current;
         engine.gravity.scale = -0.00015;
