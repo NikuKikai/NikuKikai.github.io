@@ -31,5 +31,7 @@ const pages = [
 
 export default function AppNull2() {
     const [width, height] = useWindowSize();
-    return <MangaViewer width={width} height={height} urls={pages} start_1side={false}></MangaViewer>
+    return <MangaViewer
+        width={width} height={height} urls={pages} start_1side={false}
+    ></MangaViewer>
 }

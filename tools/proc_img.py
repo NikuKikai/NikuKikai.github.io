@@ -5,8 +5,8 @@ import math
 import os
 
 
-folder = 'D:/Pictures/Draw/Comics/O/OutputRaw_jp'
-save_folder = 'D:/temp'
+folder = '../public/assets/UglyYuri/'
+save_folder = '../public/assets/UglyYuri/'
 target_height = 1200
 
 sharpen_size = 3
@@ -19,17 +19,18 @@ def resize(src, target_height):
     # blur = cv2.GaussianBlur(src, ksize=(k, k), sigmaX=0)
 
     # resize
-    resized = cv2.resize(src, (round(target_height / src.shape[0] * src.shape[1]), target_height), interpolation=cv2.INTER_AREA)
+    res = cv2.resize(src, (round(
+        target_height / src.shape[0] * src.shape[1]), target_height), interpolation=cv2.INTER_AREA)
 
     # # unsharp
     # sharp = cv2.addWeighted(
-    #     resized, 1 + sharpen_strength,
-    #     cv2.GaussianBlur(resized, (sharpen_size, sharpen_size), 0), -sharpen_strength,
+    #     res, 1 + sharpen_strength,
+    #     cv2.GaussianBlur(res, (sharpen_size, sharpen_size), 0), -sharpen_strength,
     #     gamma=0
     # )
 
-    # res = cv2.threshold(resized, 128, 255)
-    return resized
+    _, res = cv2.threshold(res, 128, 255, cv2.THRESH_BINARY)
+    return res
 
 
 def split(src: np.ndarray):
@@ -62,14 +63,26 @@ def add_solid_bg(src: np.ndarray, rgb: tuple):
 #     cv2.imwrite(os.path.join(save_folder, file.name), res, [cv2.IMWRITE_PNG_COMPRESSION, 9])
 
 
-# for Github pages: resize and split (keep transparency)
+# for Github pages: resize (keep transparency)
 for file in Path(folder).glob('*.png'):
+    print(file)
     src = cv2.imread(str(file.absolute()), cv2.IMREAD_UNCHANGED)
 
     res = resize(src, target_height)
-    left, right = split(res)
 
-    name_left = os.path.join(save_folder, file.stem + '_2' + file.suffix)
-    name_right = os.path.join(save_folder, file.stem + '_1' + file.suffix)
-    cv2.imwrite(name_left, left, [cv2.IMWRITE_PNG_COMPRESSION, 9])
-    cv2.imwrite(name_right, right, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+    name = os.path.join(save_folder, file.stem[-3:] + '.png')
+    cv2.imwrite(name, res, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+    # cv2.imwrite(name, res, [cv2.IMWRITE_JPEG_QUALITY, 100])
+
+
+# # for Github pages: resize and split (keep transparency)
+# for file in Path(folder).glob('*.png'):
+#     src = cv2.imread(str(file.absolute()), cv2.IMREAD_UNCHANGED)
+
+#     res = resize(src, target_height)
+#     left, right = split(res)
+
+#     name_left = os.path.join(save_folder, file.stem + '_2' + file.suffix)
+#     name_right = os.path.join(save_folder, file.stem + '_1' + file.suffix)
+#     cv2.imwrite(name_left, left, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+#     cv2.imwrite(name_right, right, [cv2.IMWRITE_PNG_COMPRESSION, 9])

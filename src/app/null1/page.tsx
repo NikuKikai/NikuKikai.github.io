@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useWindowSize } from "@react-hook/window-size";
 
 import './index.css';
@@ -25,25 +25,18 @@ const pages = [
 
 
 export default function AppNull1() {
-    return <Suspense><AppNull1Inner /></Suspense>
-}
-
-export function AppNull1Inner() {
-    //     const [width, height] = useWindowSize();
-    //     return <MangaViewer width={width} height={height} urls={pages}></MangaViewer>
-    // }
-
     // export function AppNull1() {
     const [width, height] = useWindowSize();
-    const [currPage, setCurrPage] = useState(0);
-    const [imgW, setImgW] = useState(0);
-    const [imgH, setImgH] = useState(0);
-    const [isImg14Visible, setImg14Visible] = useState(false);
-    const [isForward, setForward] = useState(true);
-    const [isLoaded, setLoaded] = useState(false);
+    const [isMounted, setIsMounted] = React.useState(false);
+    const [currPage, setCurrPage] = React.useState(0);
+    const [imgW, setImgW] = React.useState(0);
+    const [imgH, setImgH] = React.useState(0);
+    const [isImg14Visible, setImg14Visible] = React.useState(false);
+    const [isForward, setForward] = React.useState(true);
+    const [isLoaded, setLoaded] = React.useState(true);
 
-    const loadedList = useRef<string[]>([]);
-    const imgMap = useRef<Map<string, HTMLImageElement>>(new Map());
+    const loadedList = React.useRef<string[]>([]);
+    const imgMap = React.useRef<Map<string, HTMLImageElement>>(new Map());
 
 
     const navigate = (direction: 'left' | 'right') => {
@@ -71,14 +64,14 @@ export function AppNull1Inner() {
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.button !== 0) return;
-        if (!isLoaded) return;
+        // if (!isLoaded) return;
         if (e.clientX > width * 2 / 3)
             navigate('right');
         else if (e.clientX < width / 3)
             navigate('left');
     }
 
-    const updateImgSize = (img: HTMLImageElement) => {
+    const updateImgSize = React.useCallback((img: HTMLImageElement) => {
         const kw = img.parentElement!.parentElement!.clientWidth / img.naturalWidth;
         const kh = img.parentElement!.parentElement!.clientHeight / img.naturalHeight;
         const k = Math.min(kw, kh);
@@ -88,10 +81,16 @@ export function AppNull1Inner() {
             setImgW(w);
             setImgH(h);
         }
-    }
+    }, [imgH, imgW]);
 
 
-    useEffect(() => {
+    React.useEffect(() => {
+        // flushSync(() => {
+        setIsMounted(true); // 组件挂载后标记为客户端
+        // });
+    }, []);
+
+    React.useLayoutEffect(() => {
         const onresize = () => {
             imgMap.current.forEach(img => {
                 updateImgSize(img);
@@ -102,8 +101,13 @@ export function AppNull1Inner() {
         return () => {
             window.removeEventListener('resize', onresize);
         }
-    }, [])
+    }, [updateImgSize])
 
+
+    if (!isMounted) {
+        // return null for server rendering, to avoid Hydration issue
+        return null;
+    }
 
     const toOrFrom14 = isImg14Visible || (currPage === 12 && !isForward);
 
@@ -199,9 +203,9 @@ export function AppNull1Inner() {
             })}
 
             {/* LOADING overlay */}
-            {/* <div className='loading-div' style={{ opacity: `${isLoaded ? 0 : 1}` }}>
+            <div className='loading-div' style={{ opacity: `${isLoaded ? 0 : 1}` }}>
                 <p>LOADING...</p>
-            </div> */}
+            </div>
 
         </div>
     );

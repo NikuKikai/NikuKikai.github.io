@@ -12,16 +12,16 @@ type PhysicDivProps = {
     engine: Engine;
     margin?: number,
     style?: React.CSSProperties,
-    onClick?: ()=>void,
+    onClick?: () => void,
 }
 
 
 let physicDivYLst = 10;
 let physicDivXLst = 10;
-function randPhysicDivProps(){
-    const randX = () => window.innerWidth/2 + (Math.random()-1/2) * Math.min(window.innerWidth-200, window.innerHeight) - 100;
+function randPhysicDivProps() {
+    const randX = () => window.innerWidth / 2 + (Math.random() - 1 / 2) * Math.min(window.innerWidth - 200, window.innerHeight) - 100;
     let x = randX();
-    while (Math.abs(x-physicDivXLst) < 300) x = randX();
+    while (Math.abs(x - physicDivXLst) < 300) x = randX();
     const y = window.innerHeight + physicDivYLst;
     physicDivXLst = x;
     physicDivYLst += Math.random() * 50 + 50;
@@ -30,23 +30,23 @@ function randPhysicDivProps(){
         fposx: x + Math.random(),
         fposy: y,
         fx: 0,
-        fy: (Math.random()-1) * 0.1,
+        fy: (Math.random() - 1) * 0.1,
     }
 }
 
 
-function PhysicDiv({engine, margin, style, children, onClick} : PropsWithChildren<PhysicDivProps>) {
+function PhysicDiv({ engine, margin, style, children, onClick }: PropsWithChildren<PhysicDivProps>) {
     const divRef = useRef<HTMLDivElement>(null);
     const bodyRef = useRef<Body>(null);
-    const [pos, setPos] = useState<{x: number, y: number}>({x: 0, y: 0});
+    const [pos, setPos] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [deg, setDeg] = useState<number>(0);
 
     if (margin === undefined) margin = 0;
 
 
     const onEngineUpdated = () => {
-        setPos({x: bodyRef.current!.vertices[0].x+margin!, y: bodyRef.current!.vertices[0].y+margin!});
-        setDeg(bodyRef.current!.angle * 180/Math.PI);
+        setPos({ x: bodyRef.current!.vertices[0].x + margin!, y: bodyRef.current!.vertices[0].y + margin! });
+        setDeg(bodyRef.current!.angle * 180 / Math.PI);
     };
 
     useEffect(() => {
@@ -54,10 +54,10 @@ function PhysicDiv({engine, margin, style, children, onClick} : PropsWithChildre
 
         // Create body
         setTimeout(() => {  // NOTE divRef.current!.clientWidth is sometimes INCORRECT
-            const w = divRef.current!.clientWidth + margin!*2;
-            const h = divRef.current!.clientHeight + margin!*2;
-            const x = args.x0+w/2; const y = args.y0+h/2;
-            const body = Bodies.fromVertices(x, y, [[{x:0, y:0}, {x:w, y:0}, {x:w, y:h}, {x:0, y:h}]]);
+            const w = divRef.current!.clientWidth + margin! * 2;
+            const h = divRef.current!.clientHeight + margin! * 2;
+            const x = args.x0 + w / 2; const y = args.y0 + h / 2;
+            const body = Bodies.fromVertices(x, y, [[{ x: 0, y: 0 }, { x: w, y: 0 }, { x: w, y: h }, { x: 0, y: h }]]);
             bodyRef.current = body;
 
             World.add(engine.world, body);
@@ -65,7 +65,7 @@ function PhysicDiv({engine, margin, style, children, onClick} : PropsWithChildre
             // body.frictionStatic = 1;
 
             if (args.fposx !== undefined && args.fposy !== undefined && args.fx !== undefined && args.fy !== undefined)
-                Body.applyForce(body, {x: args.fposx, y: args.fposy}, {x: args.fx, y: args.fy});
+                Body.applyForce(body, { x: args.fposx, y: args.fposy }, { x: args.fx, y: args.fy });
             Events.on(engine, 'afterUpdate', onEngineUpdated)
 
         }, 66);
@@ -84,9 +84,9 @@ function PhysicDiv({engine, margin, style, children, onClick} : PropsWithChildre
     return (
         <div ref={divRef} key={bodyRef.current?.id} className={styles.physicDiv}
             style={{
-                left: pos.x+'px',
-                top: pos.y+'px',
-                transform: 'rotate('+deg+'deg)',
+                left: pos.x + 'px',
+                top: pos.y + 'px',
+                transform: 'rotate(' + deg + 'deg)',
                 transformOrigin: '-' + margin + 'px -' + margin + 'px',
                 cursor: 'pointer',
                 ...style
@@ -113,21 +113,21 @@ export default function Home() {
             console.log(window.location, url);
             router.replace(url);
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const engine = engineRef.current;
         const runner = runnerRef.current;
         engine.gravity.scale = -0.00015;
-        const ground = Bodies.rectangle(2000, 800, 4000, 100, {isStatic: true});
-        const leftWall = Bodies.rectangle(-40, 1000, 100, 2000, {isStatic: true});
-        const rightWall = Bodies.rectangle(1000, 1000, 100, 2000, {isStatic: true});
+        const ground = Bodies.rectangle(2000, 800, 4000, 100, { isStatic: true });
+        const leftWall = Bodies.rectangle(-40, 1000, 100, 2000, { isStatic: true });
+        const rightWall = Bodies.rectangle(1000, 1000, 100, 2000, { isStatic: true });
         World.add(engine.world, [ground, leftWall, rightWall]);
 
         // Init resize event
         const onresize = () => {
-            Body.setPosition(rightWall, {x: window.innerWidth+40, y: 1000});
-            Body.setPosition(ground, {x: 2000, y: window.innerHeight*0.6-50+5});  // collider is 5px below water surface
+            Body.setPosition(rightWall, { x: window.innerWidth + 40, y: 1000 });
+            Body.setPosition(ground, { x: 2000, y: window.innerHeight * 0.6 - 50 + 5 });  // collider is 5px below water surface
         };
         window.addEventListener('resize', onresize);
         onresize();
@@ -161,7 +161,8 @@ export default function Home() {
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'contain',
                 backgroundPosition: 'center top 0',
-                position: 'fixed', top: '0', height: '45vh', width: '100vw'}}>
+                position: 'fixed', top: '0', height: '45vh', width: '100vw'
+            }}>
             </div>
 
             {/* Tools */}
@@ -171,7 +172,8 @@ export default function Home() {
                 backgroundSize: 'contain',
                 backgroundPosition: 'center bottom 0',
                 opacity: '1',
-                position: 'fixed', bottom: '0', height: '55vh', width: '100vw'}}>
+                position: 'fixed', bottom: '0', height: '55vh', width: '100vw'
+            }}>
             </div>
 
             {/* Show bodies for DEBUG */}
@@ -197,32 +199,35 @@ export default function Home() {
             </svg> */}
 
             <div>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }}>
                     <a href='./time-life'>Time-Life</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}} onClick={()=>router.push('/null1')}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/null1')}>
                     📖「」1
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}} onClick={()=>router.push('/null2')}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/null2')}>
                     📖「」2
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}} onClick={()=>router.push('/Q')}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/Q')}>
                     📖「Q」
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '5em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/UglyYuri')}>
+                    📖「丑女百合」
+                </PhysicDiv>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }}>
                     <a href='./gallery'>Gallery</a>
                 </PhysicDiv>
 
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
                     <a href='https://twitter.com/NikuKiKai'>X</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
                     <a href='https://weibo.com/u/6010761304'>Weibo</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
                     <a href='https://photohito.com/user/159218/'>Photos</a>
                 </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{fontSize: '3em'}}>
+                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
                     <a href='https://nikukikai.hatenablog.jp/'>Hatena(chn)</a>
                 </PhysicDiv>
             </div>

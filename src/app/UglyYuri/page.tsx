@@ -10,37 +10,33 @@ const MangaViewer = dynamic(() => import('react-manga-viewer'), {
 });
 
 const pages = [
-    '/assets/Q/1.png',
-    '/assets/Q/2.png',
-    '/assets/Q/3.png',
-    '/assets/Q/4.png',
-    '/assets/Q/5.png',
-    '/assets/Q/6.png',
-    '/assets/Q/7.png',
-    '/assets/Q/8.png',
-    '/assets/Q/9.png',
-    '/assets/Q/10.png',
+    '/assets/UglyYuri/1.png',
+    '/assets/UglyYuri/2.png',
+    '/assets/UglyYuri/3.png',
+    '/assets/UglyYuri/4.png',
+    '/assets/UglyYuri/5.png',
+    '/assets/UglyYuri/6.png',
+    '/assets/UglyYuri/7.png',
+    '/assets/UglyYuri/8.png',
 ];
 const pages_jp = [
-    '/assets/Q/jp/1.png',
-    '/assets/Q/jp/2.png',
-    '/assets/Q/jp/3.png',
-    '/assets/Q/jp/4.png',
-    '/assets/Q/jp/5.png',
-    '/assets/Q/jp/6.png',
-    '/assets/Q/jp/7.png',
-    '/assets/Q/jp/8.png',
-    '/assets/Q/jp/9.png',
-    '/assets/Q/jp/10.png',
+    '/assets/UglyYuri/1.png',
+    '/assets/UglyYuri/jp/2.png',
+    '/assets/UglyYuri/jp/3.png',
+    '/assets/UglyYuri/jp/4.png',
+    '/assets/UglyYuri/jp/5.png',
+    '/assets/UglyYuri/jp/6.png',
+    '/assets/UglyYuri/jp/7.png',
+    '/assets/UglyYuri/jp/8.png',
 ];
 
 
-export default function AppQ() {
+export default function AppUglyYuri() {
 
-    return <Suspense><AppQPage /></Suspense>
+    return <Suspense><AppUglyYuriPage /></Suspense>
 }
 
-function AppQPage() {
+function AppUglyYuriPage() {
     const [width, height] = useWindowSize();
     const searchParams = useSearchParams()
     const lang = searchParams.get('lang');
@@ -50,6 +46,6 @@ function AppQPage() {
     return <MangaViewer
         width={width} height={height} urls={_pages}
         margin={'5%'}
-        start_1side={false}
+        start_1side={true}
     />
 }
