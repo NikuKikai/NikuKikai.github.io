@@ -1,233 +1,107 @@
 'use client';
 
 import React from 'react';
-import { Engine, Runner, Events, Body, Bodies, World } from 'matter-js';
-import { useRouter } from 'next/navigation';
-// import Link from 'next/link';
+// import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import * as ort from 'onnxruntime-web';
 
 import './globals.css';
-import styles from './home.module.css';
 
-
-type PhysicDivProps = {
-    engine: Engine;
-    margin?: number,
-    style?: React.CSSProperties,
-    onClick?: () => void,
-}
-
-
-let physicDivYLst = 10;
-let physicDivXLst = 10;
-function randPhysicDivProps() {
-    const randX = () => window.innerWidth / 2 + (Math.random() - 1 / 2) * Math.min(window.innerWidth - 200, window.innerHeight) - 100;
-    let x = randX();
-    while (Math.abs(x - physicDivXLst) < 300) x = randX();
-    const y = window.innerHeight + physicDivYLst;
-    physicDivXLst = x;
-    physicDivYLst += Math.random() * 50 + 50;
-    return {
-        x0: x, y0: y,
-        fposx: x + Math.random(),
-        fposy: y,
-        fx: 0,
-        fy: (Math.random() - 1) * 0.1,
-    }
-}
-
-
-function PhysicDiv({ engine, margin, style, children, onClick }: React.PropsWithChildren<PhysicDivProps>) {
-    const divRef = React.useRef<HTMLDivElement>(null);
-    const bodyRef = React.useRef<Body>(null);
-    const [pos, setPos] = React.useState<{ x: number, y: number }>({ x: 0, y: 0 });
-    const [deg, setDeg] = React.useState<number>(0);
-
-    if (margin === undefined) margin = 0;
-
-
-    const onEngineUpdated = () => {
-        setPos({ x: bodyRef.current!.vertices[0].x + margin!, y: bodyRef.current!.vertices[0].y + margin! });
-        setDeg(bodyRef.current!.angle * 180 / Math.PI);
-    };
-
-    React.useEffect(() => {
-        const args = randPhysicDivProps()
-
-        // Create body
-        setTimeout(() => {  // NOTE divRef.current!.clientWidth is sometimes INCORRECT
-            const w = divRef.current!.clientWidth + margin! * 2;
-            const h = divRef.current!.clientHeight + margin! * 2;
-            const x = args.x0 + w / 2; const y = args.y0 + h / 2;
-            const body = Bodies.fromVertices(x, y, [[{ x: 0, y: 0 }, { x: w, y: 0 }, { x: w, y: h }, { x: 0, y: h }]]);
-            bodyRef.current = body;
-
-            World.add(engine.world, body);
-            body.frictionAir = 0.002 + Math.random() * 0.02;
-            // body.frictionStatic = 1;
-
-            if (args.fposx !== undefined && args.fposy !== undefined && args.fx !== undefined && args.fy !== undefined)
-                Body.applyForce(body, { x: args.fposx, y: args.fposy }, { x: args.fx, y: args.fy });
-            Events.on(engine, 'afterUpdate', onEngineUpdated)
-
-        }, 66);
-
-        return () => {
-            if (bodyRef.current)
-                World.remove(engine.world, bodyRef.current);
-        }
-    }, []);
-
-
-    return (
-        <div ref={divRef} key={bodyRef.current?.id} className={styles.physicDiv}
-            style={{
-                left: pos.x + 'px',
-                top: pos.y + 'px',
-                transform: 'rotate(' + deg + 'deg)',
-                transformOrigin: '-' + margin + 'px -' + margin + 'px',
-                cursor: 'pointer',
-                ...style
-            }}
-            onClick={onClick}
-        >
-            {children}
-        </div>
-    )
-}
+const H = 46;
+const W = 46;
+const CH = 16;
 
 
 export default function Home() {
-    const router = useRouter();
-    // const [bodies, setBodies] = useState<Body[]>([]);
-
-    const engineRef = React.useRef<Engine>(Engine.create());
-    const runnerRef = React.useRef<Runner>(Runner.create());
+    const data = React.useRef<Float32Array | null>(null);
+    const [updated, setUpdated] = React.useState<number>(0);
+    void updated;
 
     React.useEffect(() => {
-        if (window.location.hash) {
-            const url = window.location.href.replace('/#', '');
-            // Redirect to the corresponding new route
-            console.log(window.location, url);
-            router.replace(url);
+        let intervalHandler: NodeJS.Timeout;
+        (async () => {
+            const session = await ort.InferenceSession.create('./home/short40_default.onnx');
+
+            console.log(session.inputNames, session.outputNames);
+
+            // prepare inputs. a tensor need its corresponding TypedArray as data
+            const stateArr = new Float32Array(H * W * CH);
+            for (let i = 3; i < CH; i++)
+                stateArr[H / 2 * W * CH + W / 2 * CH + i] = 1;
+            let state = new ort.Tensor('float32', stateArr, [1, H, W, CH]);
+            const angleArr = Float64Array.from([0]);
+            const angle = new ort.Tensor('float64', angleArr, [1]);
+
+            intervalHandler = setInterval(async () => {
+                // prepare feeds. use model input names as keys.
+                const feeds = { 'x.1': state, 'angle': angle };
+
+                // feed inputs and run
+                const results = await session.run(feeds);
+                // read from results
+                const stateArr_ = results[89].data as Float32Array;
+
+                // const state_gray = to_gray(stateArr_)
+                // console.log(state_gray);
+                // document.write(`${state_gray}`);
+                data.current = stateArr_;
+                setUpdated(Date.now());
+
+                state = new ort.Tensor('float32', stateArr_, [1, H, W, CH]);;
+            }, 30)
+        })();
+        return () => {
+            if (intervalHandler)
+                clearInterval(intervalHandler);
         }
-    }, [router]);
+    }, []);
 
-    React.useEffect(() => {
-        const engine = engineRef.current;
-        const runner = runnerRef.current;
-        engine.gravity.scale = -0.00015;
-        const ground = Bodies.rectangle(2000, 800, 4000, 100, { isStatic: true });
-        const leftWall = Bodies.rectangle(-40, 1000, 100, 2000, { isStatic: true });
-        const rightWall = Bodies.rectangle(1000, 1000, 100, 2000, { isStatic: true });
-        World.add(engine.world, [ground, leftWall, rightWall]);
+    return <div style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }}>
+        <div style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${W}, 1fr)`,
+            width: '60vmin', height: '60vmin'
+        }}>
+            {Array.from({ length: H * W }, (_, i) => {
+                let r = 0;
+                let g = 0;
+                let b = 0;
+                let a = 0;
+                const x = Math.floor(i / H);
+                const y = i - x * H;
+                if (data.current) {
+                    r = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 0])) * 255;
+                    g = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 1])) * 255;
+                    b = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 2])) * 255;
+                    a = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 3]));
+                }
 
-        // Init resize event
-        const onresize = () => {
-            Body.setPosition(rightWall, { x: window.innerWidth + 40, y: 1000 });
-            Body.setPosition(ground, { x: 2000, y: window.innerHeight * 0.6 - 50 + 5 });  // collider is 5px below water surface
-        };
-        window.addEventListener('resize', onresize);
-        onresize();
-
-        // Init physics
-        Runner.run(runner, engine);
-        Events.on(engine, 'afterUpdate', () => {
-            // setBodies([...Matter.Composite.allBodies(engine.world)]);
-        })
-        return () => {  // on unmount
-            window.removeEventListener('resize', onresize);
-            Runner.stop(runner);
-        }
-    }, [])
-
-
-
-    return (
-        <div>
-            {/* Water */}
-            <div style={{
-                backgroundColor: '#2cc',
-                position: 'fixed',
-                width: '100vw', height: '40vh', bottom: '0',
-
-            }}></div>
-
-            {/* Tools */}
-            <div style={{
-                backgroundImage: `url(/home/tools.png)`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top 0',
-                position: 'fixed', top: '0', height: '45vh', width: '100vw'
-            }}>
-            </div>
-
-            {/* Tools */}
-            <div style={{
-                backgroundImage: `url(/home/brain.png)`,  // https://pensoza.com/
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center bottom 0',
-                opacity: '1',
-                position: 'fixed', bottom: '0', height: '55vh', width: '100vw'
-            }}>
-            </div>
-
-            {/* Show bodies for DEBUG */}
-            {/* <svg width='100vw' height='100vh' style={{position: 'absolute', left: '0'}}>
-                <g
-                    // transform={`scale(1,1) translate(${this.state.width / 2}, ${this.state.height / 2})`}
-                >
-                    {bodies.map((body, i) => {
-                        if (!body.parts) return null;
-                        if (body.label === 'Circle Body') {
-                            return <circle key={i} cx={body.position.x} cy={body.position.y} r={body.circleRadius} fill='green'/>
-                        }
-                        else if (body.label === 'Rectangle Body' || body.label === 'Body') {
-                            let pts = '';
-                            body.vertices.forEach(v => {
-                                pts += '' + v.x + ',' + v.y + ' ';
-                            })
-                            return <polygon key={i} points={pts} fill='red'/>
-                        }
-                        return null;
-                    })}
-                </g>
-            </svg> */}
-
-            <div>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }}>
-                    <a href='./time-life'>Time-Life</a>
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/null1')}>
-                    📖「」1
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/null2')}>
-                    📖「」2
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/Q')}>
-                    📖「Q」
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }} onClick={() => router.push('/UglyYuri')}>
-                    📖「丑女百合」
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '5em' }}>
-                    <a href='./gallery'>Gallery</a>
-                </PhysicDiv>
-
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
-                    <a href='https://twitter.com/NikuKiKai'>X</a>
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
-                    <a href='https://weibo.com/u/6010761304'>Weibo</a>
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
-                    <a href='https://photohito.com/user/159218/'>Photos</a>
-                </PhysicDiv>
-                <PhysicDiv engine={engineRef.current} margin={2} style={{ fontSize: '3em' }}>
-                    <a href='https://nikukikai.hatenablog.jp/'>Hatena(chn)</a>
-                </PhysicDiv>
-            </div>
+                return <div key={i} style={{
+                    backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`,
+                }} />;
+            })}
         </div>
-    );
+        <div style={{ height: '4em' }} />
+        <div style={{ fontSize: '4vmin', fontWeight: 'normal' }}>
+            <span style={{ marginRight: '1em', fontWeight: 'bold' }}>MANGA▶</span>
+            <span style={{ marginRight: '1em' }}><Link href='/null1'>NULL1</Link></span>
+            <span></span>
+            <span style={{ marginRight: '1em' }}><Link href='/null2'>NULL2</Link></span>
+            <span style={{ marginRight: '1em' }}><Link href='/Q'>Q</Link></span>
+            <span style={{ marginRight: '1em' }}><Link href='/UglyYuri'>UglyYuri</Link></span>
+            <div style={{ height: '0' }} />
+            <span style={{ marginRight: '1em', fontWeight: 'bold' }}>LINKS▶</span>
+            <span style={{ marginRight: '1em' }}><Link href='https://x.com/NikuKiKai' target='_blank'>X</Link></span>
+            <span style={{ marginRight: '1em' }}><Link href='https://photohito.com/user/159218/' target='_blank'>PHOTO</Link></span>
+            <span style={{ marginRight: '1em' }}><Link href='https://nikukikai.hatenablog.jp/' target='_blank'>
+                BLOG<span style={{ fontSize: '1.5vmin' }}>(CHN)</span>
+            </Link></span>
+        </div>
+    </div>
 }

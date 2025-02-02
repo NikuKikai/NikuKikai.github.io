@@ -14,6 +14,12 @@
   }
 } */
 
+/* https://www.fontspace.com/ */
+/* @font-face {
+  font-family: 'SummerStory';
+  src: url(/SummerStory-Zp2Ez.otf);
+} */
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -22,20 +28,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: #eed;
+  background-color: #111;
+  color: #ddd;
   overflow: hidden;
-}
-
-@font-face {
-  font-family: 'diamonda';
-  src: url(/DiamondaRegular-GO00m.ttf);
-  /* https://www.fontspace.com/diamonda-font-f57499 */
-}
-
-.App {
-  text-align: center;
-  overflow: hidden;
-
-  font-family: 'diamonda';
-  font-weight: bolder;
+  /* font-family: 'SummerStory'; */
+  font-family: "DotGothic16", serif;
 }
