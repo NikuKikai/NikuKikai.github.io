@@ -187,6 +187,7 @@ export default function Home() {
         <div style={{ height: '4em' }} />
         <div style={{ fontSize: '4vmin', fontWeight: 'normal' }}>
             <span style={{ marginRight: '1em', fontWeight: 'bold' }}>MANGA▶</span>
+            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/komaTrials'>KOMAs</Entry>
             <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/null1'>NULL1</Entry>
             <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/null2'>NULL2</Entry>
             <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/Q'>Q</Entry>

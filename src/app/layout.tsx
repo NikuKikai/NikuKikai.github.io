@@ -1,6 +1,7 @@
 'use client';
 
 import LoadingIndicator from '@/src/app/loading';
+import './globals.css';
 
 
 export default function RootLayout({
