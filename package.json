@@ -4,11 +4,11 @@
   "version": "0.2.3",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "vike dev",
+    "build": "tsc -b && vike build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "deploy": "gh-pages --dotfiles -d dist",
+    "preview": "vike build && vike preview",
+    "deploy": "gh-pages --dotfiles -d dist\\client",
     "update-viewer": "rd /s /q node_modules\\react-manga-viewer && npm i D:/Codes/web/react-manga-viewer/react-manga-viewer/react-manga-viewer-1.2.3.tgz"
   },
   "dependencies": {
@@ -18,7 +18,9 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-manga-viewer": "1.2.5",
-    "react-router-dom": "^7.5.3"
+    "react-router-dom": "^7.5.3",
+    "vike": "^0.4.229",
+    "vike-react": "^0.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import * as ort from 'onnxruntime-web';
+import { Head } from 'vike-react/Head'
 
 const H = 46;
 const W = 46;
@@ -38,9 +39,9 @@ function Entry(props: {
         onMouseLeave={onMouseLeave}
         style={{ marginRight: '1em' }}
     >
-        <Link to={props.href} target={props.target} style={{ cursor: 'none' }}>
+        <a href={props.href} target={props.target} style={{ cursor: 'none' }}>
             {props.children}
-        </Link>
+        </a>
     </span>
 }
 
@@ -147,67 +148,70 @@ export default function Home() {
         setCursorLocked(false);
     }
 
-    return <div onMouseMove={onMouseMove} style={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        cursor: 'none',
-    }}>
-        <div ref={divRef} style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${W}, 1fr)`,
-            width: '60vmin', height: '60vmin'
+    return <><Head>
+        <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet" />
+    </Head>
+        <div onMouseMove={onMouseMove} style={{
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'none',
         }}>
-            {Array.from({ length: H * W }, (_, i) => {
-                let r = 0;
-                let g = 0;
-                let b = 0;
-                let a = 0;
-                const x = Math.floor(i / H);
-                const y = i - x * H;
-                if (data.current) {
-                    r = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 0])) * 255;
-                    g = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 1])) * 255;
-                    b = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 2])) * 255;
-                    a = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 3]));
-                }
+            <div ref={divRef} style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${W}, 1fr)`,
+                width: '60vmin', height: '60vmin'
+            }}>
+                {Array.from({ length: H * W }, (_, i) => {
+                    let r = 0;
+                    let g = 0;
+                    let b = 0;
+                    let a = 0;
+                    const x = Math.floor(i / H);
+                    const y = i - x * H;
+                    if (data.current) {
+                        r = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 0])) * 255;
+                        g = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 1])) * 255;
+                        b = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 2])) * 255;
+                        a = Math.min(1, Math.max(0, data.current[x * H * CH + y * CH + 3]));
+                    }
 
-                return <div key={i} style={{
-                    backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`,
-                }} />;
-            })}
-        </div>
-        <div style={{ height: '4em' }} />
-        <div style={{ fontSize: '4vmin', fontWeight: 'normal' }}>
-            <span style={{ marginRight: '1em', fontWeight: 'bold' }}>MANGA▶</span>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/komaTrials'>KOMAs</Entry>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/null1'>NULL1</Entry>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/null2'>NULL2</Entry>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/Q'>Q</Entry>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/UglyYuri'>UglyYuri</Entry>
-            <div style={{ height: '0' }} />
-            <span style={{ marginRight: '1em', fontWeight: 'bold' }}>LINKS▶</span>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='https://x.com/NikuKiKai' target='_blank'>X</Entry>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='https://photohito.com/user/159218/' target='_blank'>PHOTO</Entry>
-            <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='https://nikukikai.hatenablog.jp/' target='_blank'>
-                BLOG<span style={{ fontSize: '1.5vmin' }}>(CHN)</span>
-            </Entry>
-        </div>
+                    return <div key={i} style={{
+                        backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`,
+                    }} />;
+                })}
+            </div>
+            <div style={{ height: '4em' }} />
+            <div style={{ fontSize: '4vmin', fontWeight: 'normal' }}>
+                <span style={{ marginRight: '1em', fontWeight: 'bold' }}>MANGA▶</span>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/komaTrials'>KOMAs</Entry>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/null1'>NULL1</Entry>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/null2'>NULL2</Entry>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/Q'>Q</Entry>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='/UglyYuri'>UglyYuri</Entry>
+                <div style={{ height: '0' }} />
+                <span style={{ marginRight: '1em', fontWeight: 'bold' }}>LINKS▶</span>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='https://x.com/NikuKiKai' target='_blank'>X</Entry>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='https://photohito.com/user/159218/' target='_blank'>PHOTO</Entry>
+                <Entry onEnter={onEntryEnter} onLeave={onEntryLeave} href='https://nikukikai.hatenablog.jp/' target='_blank'>
+                    BLOG<span style={{ fontSize: '1.5vmin' }}>(CHN)</span>
+                </Entry>
+            </div>
 
-        {/* Cursor */}
-        <div style={{
-            position: 'absolute',
-            borderStyle: 'solid',
-            borderWidth: cursorLocked ? '2px' : '1px',
-            boxSizing: 'border-box',
-            borderColor: '#ddd',
-            pointerEvents: 'none',
-            transitionDuration: cursorLocked ? '0.1s' : '0s',
-            transitionTimingFunction: cursorLocked ? 'ease-out' : 'linear',
-            left: `calc(${cursorPos.x}px - ${cursorSize.w} / 2)`, top: `calc(${cursorPos.y}px - ${cursorSize.h} / 2)`,
-            width: `${cursorSize.w}`, height: `${cursorSize.h}`,
-        }} />
-    </div>
+            {/* Cursor */}
+            <div style={{
+                position: 'absolute',
+                borderStyle: 'solid',
+                borderWidth: cursorLocked ? '2px' : '1px',
+                boxSizing: 'border-box',
+                borderColor: '#ddd',
+                pointerEvents: 'none',
+                transitionDuration: cursorLocked ? '0.1s' : '0s',
+                transitionTimingFunction: cursorLocked ? 'ease-out' : 'linear',
+                left: `calc(${cursorPos.x}px - ${cursorSize.w} / 2)`, top: `calc(${cursorPos.y}px - ${cursorSize.h} / 2)`,
+                width: `${cursorSize.w}`, height: `${cursorSize.h}`,
+            }} />
+        </div></>
 }

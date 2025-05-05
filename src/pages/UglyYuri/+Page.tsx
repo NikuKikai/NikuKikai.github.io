@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { useSearchParams } from 'react-router-dom';
+import { usePageContext } from 'vike-react/usePageContext';
 import { useWindowSize } from "@react-hook/window-size";
 import MangaViewer from 'react-manga-viewer';
 
@@ -31,9 +31,9 @@ export default function AppUglyYuri() {
 }
 
 function AppUglyYuriPage() {
+    const pageContext = usePageContext();
     const [width, height] = useWindowSize();
-    const [searchParams] = useSearchParams()
-    const lang = searchParams.get('lang');
+    const lang = pageContext.urlParsed.search['lang'];
 
     const _pages = lang === 'jpn' ? pages_jp : pages;
 

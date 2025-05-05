@@ -1,7 +1,7 @@
 import React from 'react';
 import { useWindowSize } from "@react-hook/window-size";
 
-import './index.css';
+import styles from './null1.module.css';
 
 
 const pages = [
@@ -111,7 +111,7 @@ export default function AppNull1() {
 
 
     return (
-        <div className='container'
+        <div className={styles.container}
             style={{
                 width: `${width}px`,
                 height: `${height}px`,
@@ -119,7 +119,7 @@ export default function AppNull1() {
             onMouseDown={handleMouseDown}
         >
             {/* page 14 */}
-            <img className='img14' alt='14' src='/assets/null1/1-14.png' style={{
+            <img className={styles.img14} alt='14' src='/assets/null1/1-14.png' style={{
                 visibility: isImg14Visible ? 'visible' : 'hidden',
                 transitionDelay: !isForward && !isImg14Visible && currPage === 12 ? '2s' : '0s',
                 width: `min(${imgW * 2}px, 80%)`,
@@ -148,7 +148,7 @@ export default function AppNull1() {
 
                 return (
                     <div
-                        className='comic-page'
+                        className={styles.comic_page}
                         key={page}
                         style={{
                             left: i % 2 === 0 ? '50%' : '10%',
@@ -162,7 +162,7 @@ export default function AppNull1() {
                     >
                         {page !== '' ? (
                             <div
-                                className='comic-img-container'
+                                className={styles.comic_img_container}
                                 style={{
                                     ...(i % 2 === 0 ? { left: 0 } : { right: 0 }),
                                     width: `${imgW}px`,
@@ -177,7 +177,7 @@ export default function AppNull1() {
                                         }
                                         else imgMap.current.delete(page);
                                     }}
-                                    className='comic-img'
+                                    className={styles.comic_img}
                                     alt={page}
                                     src={page}
                                     style={{
@@ -201,7 +201,7 @@ export default function AppNull1() {
             })}
 
             {/* LOADING overlay */}
-            <div className='loading-div' style={{ opacity: `${isLoaded ? 0 : 1}` }}>
+            <div className={styles.loading_div} style={{ opacity: `${isLoaded ? 0 : 1}` }}>
                 <p>LOADING...</p>
             </div>
 
