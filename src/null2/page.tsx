@@ -1,13 +1,6 @@
-'use client';
-
-import * as React from 'react';
 import { useWindowSize } from "@react-hook/window-size";
-// import MangaViewer from "react-manga-viewer";
+import MangaViewer from "react-manga-viewer";
 
-import dynamic from 'next/dynamic';
-const MangaViewer = dynamic(() => import('react-manga-viewer'), {
-    ssr: false, // Disable SSR for this component
-});
 
 const pages = [
     '/assets/null2/「」2_000.png',

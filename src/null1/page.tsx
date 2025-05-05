@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { useWindowSize } from "@react-hook/window-size";
 

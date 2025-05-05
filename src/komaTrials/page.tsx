@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { CSSProperties } from "react";
+import { type CSSProperties } from "react";
 import { useWindowSize } from "@react-hook/window-size";
 
 
@@ -122,13 +122,13 @@ export default function KomaTrials() {
     setScrollX(- Math.min(Math.max(0, -x), div.scrollWidth - vw));
   }
 
-  const onImgClick = (e: React.MouseEvent, idx: number) => {
+  const onImgClick = (_e: React.MouseEvent, idx: number) => {
     if (isDragging) return;
     if (activeImgIdx >= 0) setActiveImgIdx(-1);
     else setActiveImgIdx(idx);
   }
 
-  const onLabelClick = (e: React.MouseEvent, idx: number) => {
+  const onLabelClick = (_e: React.MouseEvent, idx: number) => {
     if (isDragging) return;
     if (activeLabelIdx == idx) {
       setActiveLabelIdx(-1);

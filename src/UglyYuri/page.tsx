@@ -1,13 +1,7 @@
-'use client';
-
 import { Suspense } from 'react'
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'react-router-dom';
 import { useWindowSize } from "@react-hook/window-size";
-// import MangaViewer from "react-manga-viewer";
-import dynamic from 'next/dynamic';
-const MangaViewer = dynamic(() => import('react-manga-viewer'), {
-    ssr: false, // Disable SSR for this component
-});
+import MangaViewer from 'react-manga-viewer';
 
 const pages = [
     '/assets/UglyYuri/1.png',
@@ -38,7 +32,7 @@ export default function AppUglyYuri() {
 
 function AppUglyYuriPage() {
     const [width, height] = useWindowSize();
-    const searchParams = useSearchParams()
+    const [searchParams] = useSearchParams()
     const lang = searchParams.get('lang');
 
     const _pages = lang === 'jpn' ? pages_jp : pages;

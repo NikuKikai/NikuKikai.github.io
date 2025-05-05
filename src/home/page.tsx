@@ -1,11 +1,6 @@
-'use client';
-
 import React from 'react';
-// import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import * as ort from 'onnxruntime-web';
-
-import './globals.css';
 
 const H = 46;
 const W = 46;
@@ -43,7 +38,7 @@ function Entry(props: {
         onMouseLeave={onMouseLeave}
         style={{ marginRight: '1em' }}
     >
-        <Link href={props.href} target={props.target} style={{ cursor: 'none' }}>
+        <Link to={props.href} target={props.target} style={{ cursor: 'none' }}>
             {props.children}
         </Link>
     </span>
@@ -204,7 +199,9 @@ export default function Home() {
         {/* Cursor */}
         <div style={{
             position: 'absolute',
+            borderStyle: 'solid',
             borderWidth: cursorLocked ? '2px' : '1px',
+            boxSizing: 'border-box',
             borderColor: '#ddd',
             pointerEvents: 'none',
             transitionDuration: cursorLocked ? '0.1s' : '0s',
