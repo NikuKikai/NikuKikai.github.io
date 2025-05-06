@@ -5,7 +5,7 @@ Dev (has Fast Refresh rebuilding overhead):
 Build:
 `npm run build`
 
-Deploy (future):
+Deploy:
 `npm run deploy`.
 
 Ref: https://note.com/wecken/n/n73196eb22a51#63cc4479-2e90-43c9-a508-a64dd0873fd3
