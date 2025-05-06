@@ -153,7 +153,7 @@ function InfoContentCHN({ pageIdx }: { pageIdx: number }) {
 
 function InfoContentJPN({ pageIdx }: { pageIdx: number }) {
     return <>
-        <Line text='レコードが回転、生活が重复、生命が循環' />
+        <Line text='レコードが回転、生活が重複、生命が循環' />
         <Line text='レイアウトは矩形だが、ページは円形' hl={pageIdx === 0} />
         <Line text='彼女は生活の丸い境界に気づいた' hl={pageIdx === 2} />
         <Line text='特別なことをしよう' hl={pageIdx === 4} />
