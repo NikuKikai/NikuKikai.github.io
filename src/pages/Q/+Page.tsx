@@ -46,11 +46,10 @@ function AppQPage() {
     const [infoOpen, setInfoOpen] = React.useState(false);
     const [pageIdx, setPageIdx] = React.useState(0);
 
-    React.useEffect(() => {
-        setLang(pageContext.urlParsed.search['lang'] || '')
-    }, [
-        pageContext.urlParsed.search['lang']
-    ])
+    const searchLang = pageContext.urlParsed.search['lang'];
+
+    React.useEffect(() => { setLang(searchLang || '') }, [searchLang]);
+
     const _pages = lang === 'jpn' ? pages_jp : pages;
 
     const onClickLang = () => {
