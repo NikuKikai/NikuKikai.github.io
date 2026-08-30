@@ -1,0 +1,169 @@
+.viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #fff;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.dragging {
+  cursor: grabbing;
+}
+
+.dragging .entry {
+  pointer-events: none;
+}
+
+.world {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.centerCard,
+.entry {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: #111;
+  text-decoration: none;
+  transform-origin: center center;
+  transition:
+    transform 320ms ease,
+    left 320ms ease,
+    top 320ms ease,
+    box-shadow 320ms ease,
+    border-color 320ms ease,
+    background-color 320ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.centerCard {
+  position: relative;
+  border: 4px solid #111;
+  box-sizing: border-box;
+  background: #fff;
+  z-index: 20;
+}
+
+.centerCardActive {
+  transform: scale(1.02);
+}
+
+.centerInner {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 22px 20px;
+  box-sizing: border-box;
+}
+
+.centerEyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+}
+
+.centerTitle {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.centerText {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.entry {
+  position: relative;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.entryHovered {
+  z-index: 30;
+}
+
+.entryFrame {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 3px solid #111;
+  background: #fff;
+  overflow: hidden;
+  transition:
+    box-shadow 320ms ease,
+    transform 320ms ease;
+}
+
+.entryMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px 8px;
+  border-bottom: 2px solid #111;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.entryBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 12px 12px;
+  gap: 16px;
+}
+
+.entryTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1;
+  word-break: break-word;
+}
+
+.entrySubtitle {
+  font-size: 0.72rem;
+}
+
+.entryDescription {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 700px) {
+  .centerInner {
+    padding: 18px 16px;
+  }
+
+  .entryMeta {
+    padding: 8px 10px 7px;
+  }
+
+  .entryBody {
+    padding: 12px 10px 10px;
+    gap: 12px;
+  }
+
+  .entryTitle {
+    font-size: 1.08rem;
+  }
+
+  .entryDescription {
+    font-size: 0.76rem;
+  }
+}
