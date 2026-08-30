@@ -13,26 +13,32 @@ export type Bounds = {
 };
 
 
-type EntryType = 'manga' | 'link';
-type CategoryKey = 'manga' | 'links';
+type CardType = 'info' | 'manga' | 'link';
+type Category = 'manga' | 'link' | 'essay';
 
-export const CATEGORY_LABELS: Record<CategoryKey, string> = {
+export const CATEGORY_LABELS: Record<Category, string> = {
     manga: 'MANGA',
-    links: 'LINK',
+    link: 'LINK',
+    essay: 'ESSAY',
 };
 
 export type CanvasEntry = {
     id: string;
+    cardType: CardType;
+    category: Category;
+
+    // Content
     title: string;
+    target?: React.HTMLAttributeAnchorTarget;
     href: string;
-    type: EntryType;
-    category: CategoryKey;
+    subtitle?: string;
+    description: string;
+    img?: string;
+
+    // Geometry
     baseWidth: number;
     baseHeight: number;
     scale?: number;
-    subtitle?: string;
-    description: string;
-    target?: React.HTMLAttributeAnchorTarget;
     fixed?: boolean;
     fixedPosition?: { x: number; y: number };
     attractStrength?: number;

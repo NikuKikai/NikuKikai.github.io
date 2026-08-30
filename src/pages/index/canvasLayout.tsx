@@ -9,6 +9,7 @@ import {
 } from './types';
 import { ForceLayoutEngine, type ForceSolverOptions, randomReset } from './canvasForceSolver';
 import { EntryCard } from './EntryCard';
+import { MangaRadialBackdrop } from './MangaRadialBackdrop';
 
 export type CanvasForceLayoutProps = CanvasLayoutProps & {
     forceOptions: ForceSolverOptions;
@@ -125,6 +126,41 @@ function DebugRepelArrow({ repel }: { repel: Vector2 }) {
     );
 }
 
+type CanvasItemsLayerProps = {
+    items: LayoutItem[];
+    hoveredId: string | null;
+    isDragging: boolean;
+    onHoverChange: (id: string | null) => void;
+};
+
+function CanvasItemsLayer({ items, hoveredId, isDragging, onHoverChange }: CanvasItemsLayerProps) {
+    return (
+        <>
+            {items.map((item) => (
+                <div
+                    key={item.id}
+                    style={{
+                        position: 'absolute',
+                        left: item.x - item.w / 2,
+                        top: item.y - item.h / 2,
+                        width: item.w,
+                        height: item.h,
+                    }}
+                    onPointerEnter={() => onHoverChange(item.id)}
+                    onPointerLeave={() => {
+                        if (hoveredId === item.id) {
+                            onHoverChange(null);
+                        }
+                    }}
+                >
+                    <DebugRepelArrow repel={{ x: item.repelX, y: item.repelY }} />
+                    <EntryCard item={item} hovered={hoveredId === item.id} dragging={isDragging} />
+                </div>
+            ))}
+        </>
+    );
+}
+
 function createLayoutItems(items: CanvasEntry[]): LayoutItem[] {
     const layoutItems = items.map((item) => ({
         ...item,
@@ -143,13 +179,13 @@ function createLayoutItems(items: CanvasEntry[]): LayoutItem[] {
     return layoutItems;
 }
 
-export function CanvasForceLayout({
+export function CanvasLayout({
     items,
     worldPadding = 360,
     viewPadding = 96,
     cameraLerp = 0.16,
     forceOptions,
-    hoverScale = 1.12,
+    hoverScale = 1.6,
     scaleLerp = 0.2,
 }: CanvasForceLayoutProps) {
     const [hoveredId, setHoveredId] = React.useState<string | null>(null);
@@ -354,27 +390,13 @@ export function CanvasForceLayout({
                     ...worldStyle,
                 }}
             >
-                {layoutItems.map((item) => (
-                    <div
-                        key={item.id}
-                        style={{
-                            position: 'absolute',
-                            left: item.x - item.w / 2,
-                            top: item.y - item.h / 2,
-                            width: item.w,
-                            height: item.h,
-                        }}
-                        onPointerEnter={() => setHoveredScale(item.id)}
-                        onPointerLeave={() => {
-                            if (hoveredId === item.id) {
-                                setHoveredScale(null);
-                            }
-                        }}
-                    >
-                        <DebugRepelArrow repel={{ x: item.repelX, y: item.repelY }} />
-                        <EntryCard item={item} hovered={hoveredId === item.id} dragging={isDragging} />
-                    </div>
-                ))}
+                <MangaRadialBackdrop bounds={bounds} />
+                <CanvasItemsLayer
+                    items={layoutItems}
+                    hoveredId={hoveredId}
+                    isDragging={isDragging}
+                    onHoverChange={setHoveredScale}
+                />
             </div>
         </div>
     );

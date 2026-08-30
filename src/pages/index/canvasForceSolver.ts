@@ -9,10 +9,6 @@ export type ForceSolverOptions = {
     initialIterations?: number;
     pairForce?: number;
     maxSpeed?: number;
-    getBias: (item: LayoutItem) => Vector2;
-    getDepth: (item: LayoutItem, categoryIndex: number) => number;
-    getLateralOffset: (item: LayoutItem, categoryIndex: number) => number;
-    getCategoryKey: (item: LayoutItem) => string;
 };
 
 function scale(vector: Vector2, factor: number) {
