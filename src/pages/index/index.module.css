@@ -40,12 +40,10 @@
         transform 320ms ease,
         left 320ms ease,
         top 320ms ease,
-        box-shadow 320ms ease,
         border-color 320ms ease,
         background-color 320ms ease;
     user-select: none;
     -webkit-user-select: none;
-    overflow: hidden;
 }
 
 .cardInfo {
@@ -70,7 +68,6 @@
     background: #fff;
     overflow: hidden;
     transition:
-        box-shadow 320ms ease,
         transform 320ms ease;
 }
 
@@ -98,11 +95,9 @@
 }
 
 .rings {
-  /* width: 400px;
+    /* width: 400px;
   height: 400px; */
-  background: repeating-radial-gradient(
-    circle at center,
-    #fff 0 2px,
-    #000 2px 4px
-  );
+    background: repeating-radial-gradient(circle at center,
+            #fff 0 2px,
+            #000 2px 4px);
 }

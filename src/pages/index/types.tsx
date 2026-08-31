@@ -13,14 +13,9 @@ export type Bounds = {
 };
 
 
-type CardType = 'info' | 'manga' | 'link';
+type CardType = 'info' | 'book' | 'cd' | 'link' | 'web';
 type Category = 'manga' | 'link' | 'essay';
 
-export const CATEGORY_LABELS: Record<Category, string> = {
-    manga: 'MANGA',
-    link: 'LINK',
-    essay: 'ESSAY',
-};
 
 export type CanvasEntry = {
     id: string;
