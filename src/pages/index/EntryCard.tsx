@@ -1,20 +1,47 @@
+import React from 'react';
+import { DebugRepelArrow } from './debugArrow';
 import styles from './index.module.css';
 import { type LayoutItem } from './types';
+import { useLayoutStore } from './layoutStore';
 
 
-export function EntryCard({ item, hovered, dragging }: { item: LayoutItem; hovered: boolean; dragging: boolean }) {
-    if (item.cardType === 'info') {
-        return <InfoCard />;
-    }
-    if (item.cardType === 'cd') {
-        return <CDCard item={item} hovered={hovered} dragging={dragging} />;
-    }
-    if (item.cardType === 'book') {
-        return <BookCard item={item} hovered={hovered} dragging={dragging} />;
-    }
-    if (item.cardType === 'web') {
-        return <WebCard item={item} hovered={hovered} dragging={dragging} />;
-    }
+export function EntryCard({
+    id, dragging
+}: {
+    id: string; dragging: boolean
+}) {
+    const item = useLayoutStore(state => state.layoutItems.find(i => i.id == id));
+    const setItemTargetScale = useLayoutStore((state) => state.setItemTargetScale);
+    const [hovered, setHovered] = React.useState(false);
+
+    const onPointerEnter = React.useCallback((h: boolean) => {
+        if (item == undefined) return;
+        setItemTargetScale(item.id, (item.fixed || !h) ? 1 : 1.6);
+        setHovered(h);
+    }, [setItemTargetScale, item]);
+
+    if (item == undefined) return;
+
+    return (
+        <div
+            key={item.id}
+            style={{
+                position: 'absolute',
+                left: item.x - item.w / 2,
+                top: item.y - item.h / 2,
+                width: item.w,
+                height: item.h,
+            }}
+            onPointerEnter={() => onPointerEnter(true)}
+            onPointerLeave={() => onPointerEnter(false)}
+        >
+            <DebugRepelArrow repel={{ x: item.repelX, y: item.repelY }} />
+            {item.cardType === 'info' && <InfoCard />}
+            {item.cardType === 'cd' && <CDCard item={item} hovered={hovered} dragging={dragging} />}
+            {item.cardType === 'book' && <BookCard item={item} hovered={hovered} dragging={dragging} />}
+            {item.cardType === 'web' && <WebCard item={item} hovered={hovered} dragging={dragging} />}
+        </div>
+    );
 }
 
 export function InfoCard() {
@@ -32,7 +59,7 @@ export function InfoCard() {
                 </div>
                 <div style={{ display: 'flex', flex: 1, gap: '0.5em', padding: '6px 8px', justifyContent: 'flex-end', alignContent: 'flex-end', flexWrap: 'wrap' }}>
                     <a target='_blank' href='https://x.com/NikuKiKai'>
-                        <svg stroke="white" fill="white" stroke-width="0" viewBox="0 0 448 512" height="44px" width="44px" xmlns="http://www.w3.org/2000/svg"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z"></path></svg>
+                        <svg stroke="white" fill="white" strokeWidth="0" viewBox="0 0 448 512" height="44px" width="44px" xmlns="http://www.w3.org/2000/svg"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z"></path></svg>
                     </a>
                 </div>
             </div>
@@ -56,6 +83,9 @@ export function BookCard({ item, hovered, dragging }: { item: LayoutItem; hovere
                 if (dragging) {
                     event.preventDefault();
                 }
+            }}
+            onMouseEnter={(e) => {
+                console.log(`Mouse entered ${item.title}`);
             }}
         >
             <div className={`${styles.entryFrame}`} style={{
@@ -169,6 +199,7 @@ export function CDCard({ item, hovered, dragging }: { item: LayoutItem; hovered:
 
 export function WebCard({ item, hovered, dragging }: { item: LayoutItem; hovered: boolean; dragging: boolean }) {
     const s = item.scale ?? 1;
+    console.log('render card', item.x);
 
     return (
         <a
@@ -220,15 +251,15 @@ export function WebCard({ item, hovered, dragging }: { item: LayoutItem; hovered
                         }} />
                     )}
                     <div style={{
-                        position: 'absolute', width: '66%', height: '60%', bottom: `${50 * (s-1)/0.6 - 30}%`,
+                        position: 'absolute', width: '66%', height: '60%', bottom: `${50 * (s - 1) / 0.6 - 30}%`,
                         borderRadius: `${6 * s}px`, border: '1px solid black', boxSizing: 'border-box',
                         display: 'flex', flexDirection: 'column',
-                        color: 'black', textAlign: 'center', 
-                        background: `rgba(255, 255, 255, ${0.7 + (s-1)/2})`,
+                        color: 'black', textAlign: 'center',
+                        background: `rgba(255, 255, 255, ${0.7 + (s - 1) / 2})`,
                         boxShadow: '0px 0px 25px rgba(255, 255, 255, 0.5)',
                     }}>
-                        <span style={{fontSize: `130%`, padding: '2%', letterSpacing: '2px', height: '50%'}}>{item.title}</span>
-                        <span style={{fontSize: `${10 * s}px`, padding: '5%', flex: 1}}>{item.description}</span>
+                        <span style={{ fontSize: `130%`, padding: '2%', letterSpacing: '2px', height: '50%' }}>{item.title}</span>
+                        <span style={{ fontSize: `${10 * s}px`, padding: '5%', flex: 1 }}>{item.description}</span>
                     </div>
                 </div>
             </div>

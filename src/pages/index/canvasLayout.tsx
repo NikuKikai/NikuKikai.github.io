@@ -1,19 +1,19 @@
 import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
+
 import styles from './index.module.css';
 import {
     type LayoutItem,
     type CanvasLayoutProps,
-    type Vector2,
-    type CanvasEntry,
     type Bounds,
 } from './types';
-import { ForceLayoutEngine, type ForceSolverOptions, randomReset } from './canvasForceSolver';
+import { ForceLayoutEngine, type ForceSolverOptions } from './canvasForceSolver';
 import { EntryCard } from './EntryCard';
 import { MangaRadialBackdrop } from './MangaRadialBackdrop';
+import { useLayoutStore } from './layoutStore';
 
 export type CanvasForceLayoutProps = CanvasLayoutProps & {
     forceOptions: ForceSolverOptions;
-    hoverScale?: number;
     scaleLerp?: number;
 };
 
@@ -37,10 +37,10 @@ function computeWorldBounds(items: LayoutItem[], worldPadding: number): Bounds {
     }
 
     return {
-        minX: minX - worldPadding,
-        maxX: maxX + worldPadding,
-        minY: minY - worldPadding,
-        maxY: maxY + worldPadding,
+        minX: Math.round((minX - worldPadding)/100) * 100,
+        maxX: Math.round((maxX + worldPadding)/100) * 100,
+        minY: Math.round((minY - worldPadding)/100) * 100,
+        maxY: Math.round((maxY + worldPadding)/100) * 100,
     };
 }
 
@@ -64,120 +64,6 @@ function resistCamera(value: number, attempted: number, viewSize: number, minWor
     return clamp(attempted, minCamera, maxCamera);
 }
 
-function DebugRepelArrow({ repel }: { repel: Vector2 }) {
-    const length = Math.hypot(repel.x, repel.y);
-    const angle = Math.atan2(repel.y, repel.x);
-    const shaftLength = Math.max(12, Math.min(72, length * 18));
-
-    return (
-        <div
-            style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                width: 0,
-                height: 0,
-                pointerEvents: 'none',
-                zIndex: 50,
-            }}
-        >
-            <div
-                style={{
-                    position: 'relative',
-                    width: 0,
-                    height: 0,
-                }}
-            >
-                <div
-                    style={{
-                        position: 'absolute',
-                        left: 0,
-                        top: 0,
-                        width: shaftLength,
-                        transformOrigin: '0 50%',
-                        transform: `rotate(${angle}rad)`,
-                    }}
-                >
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: -1,
-                            width: shaftLength,
-                            height: 2,
-                            background: '#d11',
-                        }}
-                    />
-                    <div
-                        style={{
-                            position: 'absolute',
-                            right: -1,
-                            top: -4,
-                            width: 0,
-                            height: 0,
-                            borderTop: '5px solid transparent',
-                            borderBottom: '5px solid transparent',
-                            borderLeft: '8px solid #d11',
-                        }}
-                    />
-                </div>
-            </div>
-        </div>
-    );
-}
-
-type CanvasItemsLayerProps = {
-    items: LayoutItem[];
-    hoveredId: string | null;
-    isDragging: boolean;
-    onHoverChange: (id: string | null) => void;
-};
-
-function CanvasItemsLayer({ items, hoveredId, isDragging, onHoverChange }: CanvasItemsLayerProps) {
-    return (
-        <>
-            {items.map((item) => (
-                <div
-                    key={item.id}
-                    style={{
-                        position: 'absolute',
-                        left: item.x - item.w / 2,
-                        top: item.y - item.h / 2,
-                        width: item.w,
-                        height: item.h,
-                    }}
-                    onPointerEnter={() => onHoverChange(item.id)}
-                    onPointerLeave={() => {
-                        if (hoveredId === item.id) {
-                            onHoverChange(null);
-                        }
-                    }}
-                >
-                    <DebugRepelArrow repel={{ x: item.repelX, y: item.repelY }} />
-                    <EntryCard item={item} hovered={hoveredId === item.id} dragging={isDragging} />
-                </div>
-            ))}
-        </>
-    );
-}
-
-function createLayoutItems(items: CanvasEntry[]): LayoutItem[] {
-    const layoutItems = items.map((item) => ({
-        ...item,
-        scale: item.scale ?? 1,
-        targetScale: 1,
-        w: item.baseWidth * (item.scale ?? 1),
-        h: item.baseHeight * (item.scale ?? 1),
-        x: item.fixedPosition?.x ?? 0,
-        y: item.fixedPosition?.y ?? 0,
-        vx: 0,
-        vy: 0,
-        repelX: 0,
-        repelY: 0,
-    }));
-    randomReset(layoutItems);
-    return layoutItems;
-}
 
 export function CanvasLayout({
     items,
@@ -185,12 +71,15 @@ export function CanvasLayout({
     viewPadding = 96,
     cameraLerp = 0.16,
     forceOptions,
-    hoverScale = 1.6,
     scaleLerp = 0.2,
 }: CanvasForceLayoutProps) {
-    const [hoveredId, setHoveredId] = React.useState<string | null>(null);
-    const [layoutItems] = React.useState<LayoutItem[]>(() => createLayoutItems(items));
-    const [bounds, setBounds] = React.useState<Bounds>(() => computeWorldBounds(layoutItems, worldPadding));
+    const itemIds = useLayoutStore(useShallow((state) => state.layoutItems.map((item) => item.id)));
+
+    const updateLayoutMotion = useLayoutStore((state) => state.updateLayoutMotion);
+    const setItemSize = useLayoutStore((state) => state.setItemSize);
+
+    const [bounds, setBounds] = React.useState<Bounds>(() => computeWorldBounds(useLayoutStore.getState().layoutItems, worldPadding));
+
     const boundsRef = React.useRef(bounds);
     const viewportRef = React.useRef<HTMLDivElement>(null);
     const animationRef = React.useRef<number | null>(null);
@@ -206,13 +95,14 @@ export function CanvasLayout({
         width: 0,
         height: 0,
     });
+
     const [targetCamera, setTargetCamera] = React.useState({ x: 0, y: 0 });
     const [camera, setCamera] = React.useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = React.useState(false);
-    const [, setTick] = React.useState(0);
     const engineRef = React.useRef(new ForceLayoutEngine(forceOptions));
 
     boundsRef.current = bounds;
+
 
     React.useEffect(() => {
         const updateViewport = () => {
@@ -240,18 +130,28 @@ export function CanvasLayout({
 
     React.useEffect(() => {
         const tick = () => {
+            const layoutItems = useLayoutStore.getState().layoutItems;
             // Scale interpolation stays in the same runtime items as physics so size changes remain continuous.
             for (const item of layoutItems) {
                 item.scale = item.scale ?? 1;
                 const nextScale = item.scale + (item.targetScale - item.scale) * scaleLerp;
                 item.scale = Math.abs(item.targetScale - nextScale) < 0.001 ? item.targetScale : nextScale;
-                item.w = item.baseWidth * item.scale;
-                item.h = item.baseHeight * item.scale;
+                setItemSize(item.id, item.baseWidth * item.scale, item.baseHeight * item.scale);
             }
 
-            engineRef.current.step(layoutItems);
-            setBounds(computeWorldBounds(layoutItems, worldPadding));
-            setTick((value) => value + 1);
+            // Update motion
+            engineRef.current.step(layoutItems, updateLayoutMotion);
+
+            // Update bounds
+            const bounds_ = computeWorldBounds(layoutItems, worldPadding);
+            if (
+                bounds.minX != bounds_.minX ||
+                bounds.maxX != bounds_.maxX ||
+                bounds.minY != bounds_.minY ||
+                bounds.maxY != bounds_.maxY
+            ) {
+                setBounds(bounds_);
+            }
 
             setCamera((prev) => {
                 const dx = targetCamera.x - prev.x;
@@ -277,17 +177,8 @@ export function CanvasLayout({
                 window.cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [cameraLerp, layoutItems, scaleLerp, targetCamera, worldPadding]);
+    }, [cameraLerp, scaleLerp, bounds, targetCamera, updateLayoutMotion, setItemSize, worldPadding]);
 
-    const setHoveredScale = React.useCallback((id: string | null) => {
-        // Hover only changes target scale; the actual size is advanced numerically in the frame loop.
-        for (const item of layoutItems) {
-            item.targetScale = item.fixed ? 1 : (item.id === id ? hoverScale : 1);
-        }
-
-        setHoveredId(id);
-        setTick((value) => value + 1);
-    }, [hoverScale, layoutItems]);
 
     const setResistedTargetCamera = React.useCallback(
         (nextX: number, nextY: number) => {
@@ -391,12 +282,9 @@ export function CanvasLayout({
                 }}
             >
                 <MangaRadialBackdrop bounds={bounds} />
-                <CanvasItemsLayer
-                    items={layoutItems}
-                    hoveredId={hoveredId}
-                    isDragging={isDragging}
-                    onHoverChange={setHoveredScale}
-                />
+                {itemIds.map((id) => (
+                    <EntryCard key={id} id={id} dragging={isDragging} />
+                ))}
             </div>
         </div>
     );

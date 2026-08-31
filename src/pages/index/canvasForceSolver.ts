@@ -11,6 +11,8 @@ export type ForceSolverOptions = {
     maxSpeed?: number;
 };
 
+type UpdateLayoutMotion = (id: string, motion: Pick<LayoutItem, 'x' | 'y' | 'vx' | 'vy' | 'repelX' | 'repelY'>) => void;
+
 function scale(vector: Vector2, factor: number) {
     return { x: vector.x * factor, y: vector.y * factor };
 }
@@ -87,7 +89,7 @@ export class ForceLayoutEngine {
         this.options = options;
     }
 
-    step(items: LayoutItem[]) {
+    step(items: LayoutItem[], updateLayoutMotion: UpdateLayoutMotion) {
         const gap = this.options.gap;
         const dt = this.options.dt ?? 0.2;
         const damping = this.options.damping ?? 0.82;
@@ -101,15 +103,6 @@ export class ForceLayoutEngine {
 
             for (const item of items) {
                 if (item.fixed) {
-                    const point = item.fixedPosition ?? { x: item.x, y: item.y };
-                    next.set(item.id, {
-                        x: point.x,
-                        y: point.y,
-                        vx: 0,
-                        vy: 0,
-                        repelX: 0,
-                        repelY: 0,
-                    });
                     continue;
                 }
 
@@ -166,14 +159,21 @@ export class ForceLayoutEngine {
                     y: item.vy * damping + (attractY + repelY) * (1 - damping),
                 }, maxSpeed);
 
-                next.set(item.id, {
-                    x: item.x + velocity.x * dt,
-                    y: item.y + velocity.y * dt,
-                    vx: velocity.x,
-                    vy: velocity.y,
-                    repelX,
-                    repelY,
-                });
+                const x = item.x + velocity.x * dt;
+                const y = item.y + velocity.y * dt;
+
+                if (Math.abs(x - item.x) > 1e-1 || Math.abs(y - item.y) > 1e-1) {
+
+                    next.set(item.id, {
+                        x,
+                        y,
+                        vx: velocity.x,
+                        vy: velocity.y,
+                        repelX,
+                        repelY,
+                    });
+                }
+
             }
 
             for (const item of items) {
@@ -182,12 +182,7 @@ export class ForceLayoutEngine {
                     continue;
                 }
 
-                item.x = resolved.x;
-                item.y = resolved.y;
-                item.vx = resolved.vx;
-                item.vy = resolved.vy;
-                item.repelX = resolved.repelX;
-                item.repelY = resolved.repelY;
+                updateLayoutMotion(item.id, resolved);
             }
         }
     }
