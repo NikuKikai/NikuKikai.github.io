@@ -6,6 +6,7 @@ import { ENTRIES } from './entries';
 type LayoutState = {
     layoutItems: LayoutItem[];
     updateLayoutMotion: (id: string, motion: Pick<LayoutItem, 'x' | 'y' | 'vx' | 'vy' | 'repelX' | 'repelY'>) => void;
+    updateItem: (id: string, patch: Partial<LayoutItem>) => void;
     setItemTargetScale: (id: string, targetScale: number) => void;
     setItemSize: (id: string, w: number, h: number) => void;
     getItemIds: () => string[];
@@ -35,6 +36,9 @@ export const useLayoutStore = create<LayoutState>((set) => ({
     updateLayoutMotion: (id, motion) => set((state) => ({
         layoutItems: state.layoutItems.map((item) => (item.id === id ? { ...item, ...motion } : item)),
     })),
+    updateItem: (id, patch) => set((state) => ({
+        layoutItems: state.layoutItems.map((item) => (item.id === id ? { ...item, ...patch } : item)),
+    })),
     setItemTargetScale: (id, targetScale) => set((state) => ({
         layoutItems: state.layoutItems.map((item) => (item.id === id ? { ...item, targetScale } : item)),
     })),
@@ -50,4 +54,3 @@ export const useLayoutStore = create<LayoutState>((set) => ({
     getItemIds: () => useLayoutStore.getState().layoutItems.map((item) => item.id),
     getItemCount: () => useLayoutStore.getState().layoutItems.length,
 }));
-

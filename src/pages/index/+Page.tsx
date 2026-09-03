@@ -1,7 +1,6 @@
 import { Head } from 'vike-react/Head';
 import styles from './index.module.css';
 import { CanvasLayout } from './canvasLayout';
-import { ENTRIES } from './entries';
 
 
 export default function Home() {
@@ -12,7 +11,6 @@ export default function Home() {
             </Head>
             <div className={styles.viewport}>
                 <CanvasLayout
-                    items={ENTRIES}
                     forceOptions={{
                         gap: 20,
                         dt: 0.033,

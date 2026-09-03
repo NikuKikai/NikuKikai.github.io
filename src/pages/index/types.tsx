@@ -53,7 +53,6 @@ export type LayoutItem = CanvasEntry & {
 };
 
 export type CanvasLayoutProps = {
-    items: CanvasEntry[];
     worldPadding?: number;
     viewPadding?: number;
     cameraLerp?: number;

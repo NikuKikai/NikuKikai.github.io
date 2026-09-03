@@ -66,7 +66,6 @@ function resistCamera(value: number, attempted: number, viewSize: number, minWor
 
 
 export function CanvasLayout({
-    items,
     worldPadding = 360,
     viewPadding = 96,
     cameraLerp = 0.16,
@@ -131,13 +130,6 @@ export function CanvasLayout({
     React.useEffect(() => {
         const tick = () => {
             const layoutItems = useLayoutStore.getState().layoutItems;
-            // Scale interpolation stays in the same runtime items as physics so size changes remain continuous.
-            for (const item of layoutItems) {
-                item.scale = item.scale ?? 1;
-                const nextScale = item.scale + (item.targetScale - item.scale) * scaleLerp;
-                item.scale = Math.abs(item.targetScale - nextScale) < 0.001 ? item.targetScale : nextScale;
-                setItemSize(item.id, item.baseWidth * item.scale, item.baseHeight * item.scale);
-            }
 
             // Update motion
             engineRef.current.step(layoutItems, updateLayoutMotion);
