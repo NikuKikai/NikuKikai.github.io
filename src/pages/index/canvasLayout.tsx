@@ -265,6 +265,12 @@ export function CanvasLayout({
             onPointerUp={endDrag}
             onPointerCancel={endDrag}
         >
+            <MangaRadialBackdrop
+                cameraX={camera.x}
+                cameraY={camera.y}
+                viewportWidth={viewportWidth}
+                viewportHeight={viewportHeight}
+            />
             <div
                 className={styles.world}
                 style={{
@@ -273,7 +279,6 @@ export function CanvasLayout({
                     ...worldStyle,
                 }}
             >
-                <MangaRadialBackdrop bounds={bounds} />
                 {itemIds.map((id) => (
                     <EntryCard key={id} id={id} dragging={isDragging} />
                 ))}
