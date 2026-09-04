@@ -77,16 +77,18 @@ function useScalable({
         hovered,
     }
 }
-function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, hovered, dragging, children }: {
-    item: LayoutItem, style: React.CSSProperties, onPointerEnter: () => void,
-    onPointerLeave: () => void, hovered: boolean, dragging: boolean, children: React.ReactNode,
+function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove, hovered, dragging, children }: {
+    item: LayoutItem, style: React.CSSProperties,
+    onPointerEnter: () => void, onPointerLeave: () => void, onMouseMove?: (e: React.MouseEvent) => void,
+    hovered: boolean, dragging: boolean, children: React.ReactNode,
 }) {
     return (
         <div
             key={item.id}
-            style={style}
+            style={{ perspective: '100vmin', ...style, }}
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
+            onMouseMove={onMouseMove}
         >
             <a
                 href={item.href}
@@ -95,6 +97,7 @@ function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, hovered, dr
                 className={`${styles.entry} ${hovered ? styles.entryHovered : ''}`}
                 onDragStart={(event) => event.preventDefault()}
                 onClick={e => { if (dragging) e.preventDefault(); }}
+                style={{ transformStyle: 'preserve-3d', }}
             >
                 {children}
             </a>
@@ -261,42 +264,67 @@ export function LinkCard({ item, dragging }: { item: LayoutItem; dragging: boole
 export function CDCard({ item, dragging }: { item: LayoutItem; dragging: boolean }) {
     const scalable = useScalable({ item });
     const s = item.scale ?? 1;
+    const frameRef = React.useRef<HTMLDivElement>(null);
+
+    const onMouseMove = (e: React.MouseEvent) => {
+        if (!frameRef.current) return;
+
+        const rect = frameRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+        frameRef.current.style.transform = `rotateX(${-y * 18}deg) rotateY(${x * 18}deg)`;
+    };
+
+    React.useEffect(() => {
+        if (!frameRef.current) return;
+        if (!scalable.hovered) {
+            frameRef.current.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        }
+    }, [scalable.hovered])
+
     return (
-        <ScalableDivA {...scalable} item={item} dragging={dragging}>
-            <div className={`${styles.entryFrame} ${styles.rings}`}>
+        <ScalableDivA {...scalable} item={item} dragging={dragging} onMouseMove={onMouseMove}>
+            <div ref={frameRef} className={`${styles.entryFrame} ${styles.rings}`} style={{
+                transformStyle: 'preserve-3d',
+                transition: 'none',
+            }}>
                 <div style={{
                     position: 'relative', display: 'flex', flex: 1,
                     margin: '6px', minHeight: 0, minWidth: 0, overflow: 'hidden',
-                    justifyContent: 'center', alignItems: 'center'
+                    justifyContent: 'center', alignItems: 'center',
                 }}>
                     {item.img && (
-                        <img src={item.img} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        <img src={item.img} alt={item.title} style={{
+                            width: '100%', height: '100%', objectFit: 'contain'
+                        }} />
                     )}
                 </div>
-            </div>
-            <div style={{
-                position: 'absolute', height: 'calc(100% - 8px)', width: '12%',
-                background: 'white', margin: '4px',
-                boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
-                justifyContent: 'center', alignItems: 'flex-end',
-                gap: '5%',
-            }}>
-                <span style={{
-                    boxSizing: 'border-box',
-                    height: 'auto', width: '100%',
-                    padding: '30% 0px',
-                    marginRight: '-20%', marginTop: '10%',
-                    fontWeight: 'bold', fontSize: `${16 * s}px`,
-                    background: 'black', color: 'white', textAlign: 'center',
-                    writingMode: 'vertical-rl', textOrientation: 'mixed', whiteSpace: 'nowrap'
-                }}>{item.title}</span>
-                <span style={{
-                    display: 'block', boxSizing: 'border-box',
-                    flex: 1, width: '100%',
-                    padding: `${1 * s}px`,
-                    fontWeight: 'bold', fontSize: `${10 * s}px`, lineHeight: `${10 * s}px`,
-                    writingMode: 'vertical-rl', textOrientation: 'mixed',
-                }}>{item.description}</span>
+                {/* Label */}
+                <div style={{
+                    position: 'absolute', height: '100%', width: '12%',
+                    background: 'white', margin: '0',
+                    boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
+                    justifyContent: 'center', alignItems: 'flex-end',
+                    gap: '5%',
+                }}>
+                    <span style={{
+                        boxSizing: 'border-box',
+                        height: 'auto', width: '100%',
+                        padding: '30% 0px',
+                        marginRight: '-20%', marginTop: '10%',
+                        fontWeight: 'bold', fontSize: `${16 * s}px`,
+                        background: 'black', color: 'white', textAlign: 'center',
+                        writingMode: 'vertical-rl', textOrientation: 'mixed', whiteSpace: 'nowrap'
+                    }}>{item.title}</span>
+                    <span style={{
+                        display: 'block', boxSizing: 'border-box',
+                        flex: 1, width: '100%',
+                        padding: `${1 * s}px`,
+                        fontWeight: 'bold', fontSize: `${10 * s}px`, lineHeight: `${10 * s}px`,
+                        writingMode: 'vertical-rl', textOrientation: 'mixed',
+                    }}>{item.description}</span>
+                </div>
             </div>
         </ScalableDivA>
     );
