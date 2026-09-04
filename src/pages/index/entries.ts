@@ -34,7 +34,8 @@ export const ENTRIES: CanvasEntry[] = [
         category: 'manga',
         baseWidth: 182,
         baseHeight: 257,
-        description: 'Short comic page entry.'
+        description: 'Short comic page entry.',
+        img: '/assets/null1/cover.png',
     },
     {
         id: 'null2',
@@ -44,7 +45,8 @@ export const ENTRIES: CanvasEntry[] = [
         category: 'manga',
         baseWidth: 182,
         baseHeight: 257,
-        description: 'Short comic page entry.'
+        description: 'Short comic page entry.',
+        img: '/assets/null2/cover.png',
     },
     {
         id: 'q',

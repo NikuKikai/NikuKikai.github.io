@@ -86,7 +86,11 @@ function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove
     return (
         <div
             key={item.id}
-            style={{ perspective: '100vmin', ...style, zIndex: hovered ? 30 : 10 }}
+            style={{ 
+                perspective: hovered? '100vmin': '10000vmin',
+                ...style,
+                zIndex: hovered ? 30 : 10
+            }}
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
             onMouseMove={onMouseMove}
@@ -275,7 +279,7 @@ export function CDCard({ item, dragging }: { item: LayoutItem; dragging: boolean
         const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
         const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
 
-        frameRef.current.style.transform = `rotateX(${-y * 18}deg) rotateY(${x * 18}deg)`;
+        frameRef.current.style.transform = `rotateX(${-y * 22}deg) rotateY(${x * 22}deg)`;
     };
 
     React.useEffect(() => {
@@ -299,22 +303,43 @@ export function CDCard({ item, dragging }: { item: LayoutItem; dragging: boolean
                 }}>
                     {item.img && (
                         <img src={item.img} alt={item.title} style={{
+                            position: 'absolute',
                             width: '100%', height: '100%', objectFit: 'contain',
-                            transform: scalable.hovered ? 'translateZ(15px)' : 'none',
+                            transform: scalable.hovered ? 'translateZ(0px) translateX(40px)' : 'none',
+                            transition: 'transform 500ms ease',
+                            transformStyle: 'preserve-3d',
+                            filter: 'brightness(0) invert(1)',
+                        }} />
+                    )}
+                    {item.img && (
+                        <img src={item.img} alt={item.title} style={{
+                            position: 'absolute',
+                            width: '100%', height: '100%', objectFit: 'contain',
+                            transform: scalable.hovered ? 'translateZ(15px) translateX(40px)' : 'none',
+                            transition: 'transform 500ms ease',
                             transformStyle: 'preserve-3d',
                         }} />
                     )}
                 </div>
                 {/* Label */}
                 <div style={{
-                    position: 'absolute', height: '100%', width: '12%',
+                    position: 'absolute',
+                    height: '100%', width: '12%',
                     background: 'white', margin: '0',
                     boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
                     justifyContent: 'center', alignItems: 'flex-end',
                     gap: '5%',
                     transformStyle: 'preserve-3d',
-                    transform: scalable.hovered ? 'translateZ(40px)' : 'none',
+                    transform: 'translateZ(30px)',
                 }}>
+                    {/* Side */}
+                    <div style={{
+                        position: 'absolute',
+                        height: '100%', width: '30px', left: '0',
+                        background: '#ccc',
+                        transformOrigin: 'left',
+                        transform: 'rotateY(90deg)',
+                    }} />
                     <span style={{
                         boxSizing: 'border-box',
                         height: 'auto', width: '100%',
