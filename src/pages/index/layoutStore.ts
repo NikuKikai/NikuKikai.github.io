@@ -5,10 +5,16 @@ import { ENTRIES } from './entries';
 
 type LayoutState = {
     layoutItems: LayoutItem[];
+    mouse: { x: number, y: number };
+    camera: { x: number, y: number };
+    viewportSize: { w: number, h: number };
     updateLayoutMotion: (id: string, motion: Pick<LayoutItem, 'x' | 'y' | 'vx' | 'vy' | 'repelX' | 'repelY'>) => void;
     updateItem: (id: string, patch: Partial<LayoutItem>) => void;
     setItemTargetScale: (id: string, targetScale: number) => void;
     setItemSize: (id: string, w: number, h: number) => void;
+    setMouse: (x: number, y: number) => void;
+    setCamera: (x: number, y: number) => void;
+    setViewportSize: (w: number, h: number) => void;
     getItemIds: () => string[];
     getItemCount: () => number;
 };
@@ -33,16 +39,23 @@ function createLayoutItems(items: CanvasEntry[]): LayoutItem[] {
 
 export const useLayoutStore = create<LayoutState>((set) => ({
     layoutItems: createLayoutItems(ENTRIES),
+    mouse: { x: 0, y: 0 },
+    camera: { x: 0, y: 0 },
+    viewportSize: { w: 0, h: 0 },
     updateLayoutMotion: (id, motion) => set((state) => ({
+        ...state,
         layoutItems: state.layoutItems.map((item) => (item.id === id ? { ...item, ...motion } : item)),
     })),
     updateItem: (id, patch) => set((state) => ({
+        ...state,
         layoutItems: state.layoutItems.map((item) => (item.id === id ? { ...item, ...patch } : item)),
     })),
     setItemTargetScale: (id, targetScale) => set((state) => ({
+        ...state,
         layoutItems: state.layoutItems.map((item) => (item.id === id ? { ...item, targetScale } : item)),
     })),
     setItemSize: (id, w, h) => set((state) => ({
+        ...state,
         layoutItems: state.layoutItems.map((item) => {
             if (item.id === id) {
                 if (item.w != w || item.h != h)
@@ -50,6 +63,18 @@ export const useLayoutStore = create<LayoutState>((set) => ({
             }
             return item;
         }),
+    })),
+    setMouse: (x, y) => set((state) => ({
+        ...state,
+        mouse: { x, y },
+    })),
+    setCamera: (x, y) => set((state) => ({
+        ...state,
+        camera: { x, y },
+    })),
+    setViewportSize: (w, h) => set((state) => ({
+        ...state,
+        viewportSize: { w, h },
     })),
     getItemIds: () => useLayoutStore.getState().layoutItems.map((item) => item.id),
     getItemCount: () => useLayoutStore.getState().layoutItems.length,

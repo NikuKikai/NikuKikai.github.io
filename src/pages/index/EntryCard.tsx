@@ -86,8 +86,8 @@ function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove
     return (
         <div
             key={item.id}
-            style={{ 
-                perspective: hovered? '100vmin': '10000vmin',
+            style={{
+                perspective: hovered ? '100vmin' : '10000vmin',
                 ...style,
                 zIndex: hovered ? 30 : 10
             }}
@@ -111,6 +111,14 @@ function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove
 }
 
 export function InfoCard({ item, dragging }: { item: LayoutItem; dragging: boolean }) {
+    const mouse = useLayoutStore(s => s.mouse);
+    const cam = useLayoutStore(s => s.camera);
+    const viewportSize = useLayoutStore(s => s.viewportSize);
+    const eyeMove = {
+        x: viewportSize.w == 0 ? 0 : (Math.max(-1, Math.min(1, (mouse.x + cam.x) / viewportSize.w)) - 0.5) * 5,
+        y: viewportSize.h == 0 ? 0 : (Math.max(-1, Math.min(1, (mouse.y + cam.y) / viewportSize.h)) - 0.5) * 4,
+    }
+
     return (
         <div
             key={item.id}
@@ -123,22 +131,56 @@ export function InfoCard({ item, dragging }: { item: LayoutItem; dragging: boole
                 zIndex: 11,
             }}
         >
-            <div className={styles.cardInfo}>
-                <img
-                    src='/assets/icon.png'
-                    alt='Profile'
-                    style={{ height: '100%', objectFit: 'contain', paddingTop: '20px', boxSizing: 'border-box' }}
-                />
-                <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '12px', paddingTop: '4px', flex: 1 }}>
-                    <div>
-                        <p style={{ margin: 0, fontSize: '50px', fontWeight: 'bold', textAlign: 'right', letterSpacing: '5px', paddingRight: '5px' }}>NIKU</p>
-                        <p style={{ margin: 0, fontSize: '50px', fontWeight: 'bold', textAlign: 'right', letterSpacing: '0px', marginTop: '-20px' }}>KIKAI</p>
-                    </div>
-                    <div style={{ display: 'flex', flex: 1, gap: '0.5em', padding: '6px 8px', justifyContent: 'flex-end', alignContent: 'flex-end', flexWrap: 'wrap' }}>
-                        <a target='_blank' href='https://x.com/NikuKiKai'>
-                            <svg stroke="white" fill="white" strokeWidth="0" viewBox="0 0 448 512" height="44px" width="44px" xmlns="http://www.w3.org/2000/svg"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z"></path></svg>
-                        </a>
-                    </div>
+            <div style={{
+                position: 'absolute', width: '100%', height: '82%', bottom: 0, background: 'black',
+                border: '4px black solid', boxSizing: 'border-box',
+            }} >
+                <span style={{
+                    position: 'absolute', color: 'black', bottom: 'calc(100% - 7px)', right: '0px',
+                    fontSize: '44px', fontWeight: 'bold', letterSpacing: '-6px',
+                    fontFamily: 'system-ui'
+                }}>NIKUKIKAI</span>
+            </div>
+            <img
+                src='/assets/avatar.png'
+                alt='Profile'
+                style={{
+                    position: 'absolute',
+                    height: '100%',
+                    objectFit: 'contain',
+                    padding: '4px', paddingTop: '0px', boxSizing: 'border-box',
+                }}
+            />
+            <img
+                src='/assets/avatar_eyeL.png'
+                alt='Profile'
+                style={{
+                    position: 'absolute',
+                    height: '100%',
+                    objectFit: 'contain',
+                    padding: '4px', paddingTop: '0px', boxSizing: 'border-box',
+                    transform: `translate(${eyeMove.x}px, ${eyeMove.y + 1}px)`,
+                }}
+            />
+            <img
+                src='/assets/avatar_eyeR.png'
+                alt='Profile'
+                style={{
+                    position: 'absolute',
+                    height: '100%',
+                    objectFit: 'contain',
+                    padding: '4px', paddingTop: '0px', boxSizing: 'border-box',
+                    transform: `translate(${eyeMove.x + 2}px, ${eyeMove.y}px)`,
+                }}
+            />
+            <div style={{
+                position: 'absolute', right: 0, bottom: 0,
+                display: 'flex', flexDirection: 'column', paddingLeft: '12px', paddingTop: '4px', flex: 1
+            }}>
+                <div style={{ display: 'flex', flex: 1, gap: '0.5em', padding: '6px 8px', justifyContent: 'flex-end', alignContent: 'flex-end', flexWrap: 'wrap' }}>
+                    <a className={styles.button} target='_blank' href='https://x.com/NikuKiKai'>
+                        <svg stroke="white" fill="white" strokeWidth="0" viewBox="0 0 448 512" height="44px" width="44px" xmlns="http://www.w3.org/2000/svg"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z"></path></svg>
+                    </a>
                 </div>
             </div>
         </div >
@@ -567,8 +609,9 @@ export function RoomCard({ item, dragging }: { item: LayoutItem; dragging: boole
                     display: 'flex',
                     alignItems: 'center', justifyContent: 'center',
                     color: 'white', fontSize: '64px',
-                    opacity: scalable.hovered? 0: 1,
-                    transition: 'opacity 500ms ease',
+                    opacity: scalable.hovered ? 0 : 1,
+                    letterSpacing: scalable.hovered? '200px': 0,
+                    transition: '400ms ease',
                 }}>
                     <span>{item.title}</span>
                 </div>

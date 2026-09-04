@@ -37,10 +37,10 @@ function computeWorldBounds(items: LayoutItem[], worldPadding: number): Bounds {
     }
 
     return {
-        minX: Math.round((minX - worldPadding)/100) * 100,
-        maxX: Math.round((maxX + worldPadding)/100) * 100,
-        minY: Math.round((minY - worldPadding)/100) * 100,
-        maxY: Math.round((maxY + worldPadding)/100) * 100,
+        minX: Math.round((minX - worldPadding) / 100) * 100,
+        maxX: Math.round((maxX + worldPadding) / 100) * 100,
+        minY: Math.round((minY - worldPadding) / 100) * 100,
+        maxY: Math.round((maxY + worldPadding) / 100) * 100,
     };
 }
 
@@ -73,6 +73,9 @@ export function CanvasLayout({
     scaleLerp = 0.2,
 }: CanvasForceLayoutProps) {
     const itemIds = useLayoutStore(useShallow((state) => state.layoutItems.map((item) => item.id)));
+    const setMouse = useLayoutStore(state => state.setMouse);
+    const setStoreCamera = useLayoutStore(state => state.setCamera);
+    const setViewportSize = useLayoutStore(state => state.setViewportSize);
 
     const updateLayoutMotion = useLayoutStore((state) => state.updateLayoutMotion);
     const setItemSize = useLayoutStore((state) => state.setItemSize);
@@ -204,6 +207,17 @@ export function CanvasLayout({
     };
 
     const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+        if (viewportRef.current) {
+            setMouse(
+                event.clientX - viewportRef.current.clientLeft,
+                event.clientY - viewportRef.current.clientTop,
+            );
+            setStoreCamera(camera.x, camera.y);
+            setViewportSize(
+                viewportRef.current.clientWidth,
+                viewportRef.current.clientHeight,
+            );
+        }
         const drag = dragState.current;
         if (!drag || drag.pointerId !== event.pointerId) {
             return;

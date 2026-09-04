@@ -206,7 +206,6 @@ export function MangaRadialBackdrop({
             canvas.width = pixelWidth;
             canvas.height = pixelHeight;
         }
-        console.log('effect 2');
 
         state.gl.viewport(0, 0, pixelWidth, pixelHeight);
     }, [viewportHeight, viewportWidth]);
@@ -216,7 +215,6 @@ export function MangaRadialBackdrop({
         if (!state || !viewportWidth || !viewportHeight) {
             return;
         }
-        console.log('effect 3');
 
         const { gl, program } = state;
         const dpr = window.devicePixelRatio || 1;
