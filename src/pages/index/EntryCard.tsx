@@ -21,6 +21,7 @@ export function EntryCard({
         {item.cardType === 'book' && <BookCard item={item} dragging={dragging} />}
         {item.cardType === 'web' && <WebCard item={item} dragging={dragging} />}
         {item.cardType === 'link' && <LinkCard item={item} dragging={dragging} />}
+        {item.cardType === 'room' && <RoomCard item={item} dragging={dragging} />}
     </>);
 }
 
@@ -85,7 +86,7 @@ function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove
     return (
         <div
             key={item.id}
-            style={{ perspective: '100vmin', ...style, }}
+            style={{ perspective: '100vmin', ...style, zIndex: hovered ? 30 : 10 }}
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
             onMouseMove={onMouseMove}
@@ -94,7 +95,7 @@ function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove
                 href={item.href}
                 target={item.target}
                 rel={item.target === '_blank' ? 'noreferrer' : undefined}
-                className={`${styles.entry} ${hovered ? styles.entryHovered : ''}`}
+                className={styles.entry}
                 onDragStart={(event) => event.preventDefault()}
                 onClick={e => { if (dragging) e.preventDefault(); }}
                 style={{ transformStyle: 'preserve-3d', }}
@@ -115,6 +116,7 @@ export function InfoCard({ item, dragging }: { item: LayoutItem; dragging: boole
                 top: item.y - item.h / 2,
                 width: item.w,
                 height: item.h,
+                zIndex: 11,
             }}
         >
             <div className={styles.cardInfo}>
@@ -291,12 +293,15 @@ export function CDCard({ item, dragging }: { item: LayoutItem; dragging: boolean
             }}>
                 <div style={{
                     position: 'relative', display: 'flex', flex: 1,
-                    margin: '6px', minHeight: 0, minWidth: 0, overflow: 'hidden',
+                    margin: '6px', minHeight: 0, minWidth: 0,
                     justifyContent: 'center', alignItems: 'center',
+                    transformStyle: 'preserve-3d',
                 }}>
                     {item.img && (
                         <img src={item.img} alt={item.title} style={{
-                            width: '100%', height: '100%', objectFit: 'contain'
+                            width: '100%', height: '100%', objectFit: 'contain',
+                            transform: scalable.hovered ? 'translateZ(15px)' : 'none',
+                            transformStyle: 'preserve-3d',
                         }} />
                     )}
                 </div>
@@ -307,6 +312,8 @@ export function CDCard({ item, dragging }: { item: LayoutItem; dragging: boolean
                     boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
                     justifyContent: 'center', alignItems: 'flex-end',
                     gap: '5%',
+                    transformStyle: 'preserve-3d',
+                    transform: scalable.hovered ? 'translateZ(40px)' : 'none',
                 }}>
                     <span style={{
                         boxSizing: 'border-box',
@@ -386,5 +393,161 @@ export function WebCard({ item, dragging }: { item: LayoutItem; dragging: boolea
                 </div>
             </div>
         </ScalableDivA>
+    );
+}
+
+export function RoomCard({ item, dragging }: { item: LayoutItem; dragging: boolean }) {
+    const scalable = useScalable({ item });
+    const s = item.scale ?? 1;
+    const frameRef = React.useRef<HTMLDivElement>(null);
+    const sceneRef = React.useRef<HTMLDivElement>(null);
+    const leftWallRef = React.useRef<HTMLDivElement>(null);
+    const rightWallRef = React.useRef<HTMLDivElement>(null);
+    const ceilRef = React.useRef<HTMLDivElement>(null);
+    const floorRef = React.useRef<HTMLDivElement>(null);
+
+    const onMouseMove = (e: React.MouseEvent) => {
+        if (!frameRef.current || !sceneRef.current) return;
+
+        const rect = frameRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+        sceneRef.current.style.transform = `rotateX(${-y * 30}deg) rotateY(${-20 + x * 30}deg)`;
+    };
+
+    React.useEffect(() => {
+        if (!sceneRef.current) return;
+        if (!scalable.hovered) {
+            sceneRef.current.style.transform = `rotateX(0deg) rotateY(-20deg)`;
+        }
+    }, [scalable.hovered])
+
+    return (
+        <ScalableDivA {...scalable} item={item} dragging={dragging} onMouseMove={onMouseMove}>
+            <div ref={frameRef} className={`${styles.entryFrame}`} style={{
+                transition: 'none',
+                overflow: 'hidden',
+                background: 'black',
+            }}>
+                {/* Inner 3D scene */}
+                <div style={{
+                    position: 'relative',
+                    width: '100%', height: '100%', margin: 0,
+                    perspective: '150px',
+                }}>
+                    <div ref={sceneRef} style={{
+                        position: 'relative',
+                        width: '100%', height: '100%', margin: 0,
+                        transformStyle: 'preserve-3d',
+                        transition: 'none',
+                        containerType: 'inline-size',
+                    }}>
+                        {/* Left wall */}
+                        <div ref={leftWallRef} style={{
+                            position: 'absolute',
+                            width: '200%', left: '-50%',
+                            height: '150cqw', bottom: '-20cqw',
+                            display: 'flex',
+                            justifyContent: 'center', alignItems: 'center',
+                            transformStyle: 'preserve-3d',
+                            transformOrigin: '25% 50% 0',
+                            transform: 'rotateY(90deg) translateZ(0.1px)',
+                            background: '#ddd',
+                            overflow: 'hidden',
+                        }}>
+                            {item.img && (
+                                <img src={item.img} alt={item.title} style={{
+                                    position: 'absolute',
+                                    height: '50%', bottom: '15%', left: '5%',
+                                }} />
+                            )}
+                            <div style={{
+                                position: 'absolute',
+                                width: '100%', height: '100%',
+                                background: 'linear-gradient(to right, transparent 20%, black 100%)',
+                            }} />
+                        </div>
+                        {/* Right wall */}
+                        <div ref={rightWallRef} style={{
+                            position: 'absolute',
+                            width: '200%', right: '-50%',
+                            height: '150cqw', bottom: '-20cqw',
+                            display: 'flex',
+                            justifyContent: 'center', alignItems: 'center',
+                            transformStyle: 'preserve-3d',
+                            transformOrigin: '75% 50% 0',
+                            transform: 'rotateY(-90deg) translateZ(0.1px)',
+                            background: 'linear-gradient(to left, #ddd 20%, black 100%)',
+                        }}>
+                        </div>
+                        {/* Ceil */}
+                        <div ref={ceilRef} style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '200cqw', top: '-80cqw',
+                            display: 'flex',
+                            justifyContent: 'center', alignItems: 'center',
+                            transformStyle: 'preserve-3d',
+                            transformOrigin: '50% 50cqw 0',
+                            transform: 'rotateX(-90deg) translateZ(0.1px)',
+                            background: 'linear-gradient(to bottom, gray 40%, black 100%)',
+                        }}>
+                        </div>
+                        {/* Floor */}
+                        <div ref={floorRef} style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '200cqw', bottom: '-70cqw',
+                            display: 'flex',
+                            justifyContent: 'center', alignItems: 'center',
+                            transformStyle: 'preserve-3d',
+                            transformOrigin: '50% 150cqw 0',
+                            transform: 'rotateX(90deg) translateZ(0.1px)',
+                            background: 'linear-gradient(to top, gray 40%, black 100%)',
+                        }}>
+                        </div>
+                        {/* Label */}
+                        {/* <div style={{
+                        position: 'absolute', height: '100%', width: '12%',
+                        background: 'white', margin: '0',
+                        boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
+                        justifyContent: 'center', alignItems: 'flex-end',
+                        gap: '5%',
+                        transformStyle: 'preserve-3d',
+                        transform: scalable.hovered ? 'translateZ(40px)' : 'none',
+                    }}>
+                        <span style={{
+                            boxSizing: 'border-box',
+                            height: 'auto', width: '100%',
+                            padding: '30% 0px',
+                            marginRight: '-20%', marginTop: '10%',
+                            fontWeight: 'bold', fontSize: `${16 * s}px`,
+                            background: 'black', color: 'white', textAlign: 'center',
+                            writingMode: 'vertical-rl', textOrientation: 'mixed', whiteSpace: 'nowrap'
+                        }}>{item.title}</span>
+                        <span style={{
+                            display: 'block', boxSizing: 'border-box',
+                            flex: 1, width: '100%',
+                            padding: `${1 * s}px`,
+                            fontWeight: 'bold', fontSize: `${10 * s}px`, lineHeight: `${10 * s}px`,
+                            writingMode: 'vertical-rl', textOrientation: 'mixed',
+                        }}>{item.description}</span>
+                    </div> */}
+                    </div>
+                </div>
+                <div style={{
+                    position: 'absolute',
+                    width: '100%', height: '100%', marginLeft: '-4px', marginTop: '-4px',
+                    display: 'flex',
+                    alignItems: 'center', justifyContent: 'center',
+                    color: 'white', fontSize: '64px',
+                    opacity: scalable.hovered? 0: 1,
+                    transition: 'opacity 500ms ease',
+                }}>
+                    <span>{item.title}</span>
+                </div>
+            </div>
+        </ScalableDivA >
     );
 }

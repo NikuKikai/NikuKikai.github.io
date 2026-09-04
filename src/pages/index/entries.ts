@@ -19,11 +19,12 @@ export const ENTRIES: CanvasEntry[] = [
         id: 'komas',
         title: 'KOMAs',
         href: '/komaTrials',
-        cardType: 'book',
+        cardType: 'room',
         category: 'manga',
-        baseWidth: 236,
-        baseHeight: 168,
-        description: 'Experimental one-page works about the comic panel.'
+        baseWidth: 240,
+        baseHeight: 180,
+        description: 'Experimental one-page works about the comic panel.',
+        img: '/assets/komaTrials/cover.png',
     },
     {
         id: 'null1',
@@ -31,8 +32,8 @@ export const ENTRIES: CanvasEntry[] = [
         href: '/null1',
         cardType: 'book',
         category: 'manga',
-        baseWidth: 198,
-        baseHeight: 138,
+        baseWidth: 182,
+        baseHeight: 257,
         description: 'Short comic page entry.'
     },
     {
@@ -41,8 +42,8 @@ export const ENTRIES: CanvasEntry[] = [
         href: '/null2',
         cardType: 'book',
         category: 'manga',
-        baseWidth: 198,
-        baseHeight: 138,
+        baseWidth: 182,
+        baseHeight: 257,
         description: 'Short comic page entry.'
     },
     {

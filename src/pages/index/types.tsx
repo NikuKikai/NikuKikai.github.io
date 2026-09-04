@@ -13,7 +13,7 @@ export type Bounds = {
 };
 
 
-type CardType = 'info' | 'book' | 'cd' | 'link' | 'web';
+type CardType = 'info' | 'book' | 'cd' | 'link' | 'web' | 'room';
 type Category = 'manga' | 'link' | 'essay';
 
 
