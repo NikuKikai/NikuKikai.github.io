@@ -26,6 +26,7 @@ export const ENTRIES: CanvasEntry[] = [
         baseHeight: 180,
         description: 'Experimental one-page works about the comic panel.',
         img: '/assets/komaTrials/cover.png',
+        spawnAngle: 20,
     },
     {
         id: 'null1',
@@ -37,6 +38,7 @@ export const ENTRIES: CanvasEntry[] = [
         baseHeight: 257,
         description: 'I\'m not here.',
         img: '/assets/null1/cover.png',
+        spawnAngle: 35,
     },
     {
         id: 'null2',
@@ -48,6 +50,7 @@ export const ENTRIES: CanvasEntry[] = [
         baseHeight: 257,
         description: 'Body isn\'t here.',
         img: '/assets/null2/cover.png',
+        spawnAngle: 45,
     },
     {
         id: 'q',
@@ -59,6 +62,7 @@ export const ENTRIES: CanvasEntry[] = [
         baseHeight: 200,
         description: 'Circular composition  & reading experiment.',
         img: '/assets/Q/cover.png',
+        spawnAngle: -10,
     },
     {
         id: 'ugly-yuri',
@@ -71,6 +75,7 @@ export const ENTRIES: CanvasEntry[] = [
         baseHeight: 257,
         description: 'ともに落ちよう...',
         img: '/assets/UglyYuri/cover.png',
+        spawnAngle: 55,
     },
     {
         id: 'rhythm-geo',
@@ -78,11 +83,12 @@ export const ENTRIES: CanvasEntry[] = [
         target: '_blank',
         href: 'https://nikukikai.art/RhythmGeometry/',
         cardType: 'web',
-        category: 'manga',
+        category: 'dev',
         baseWidth: 240,
         baseHeight: 150,
         description: 'Geometric analysis of musical rhythm.',
         img: '/assets/web/rhythm-geo.png',
+        spawnAngle: -25,
     },
     {
         id: 'manga-space',
@@ -94,6 +100,7 @@ export const ENTRIES: CanvasEntry[] = [
         baseWidth: 180,
         baseHeight: 64,
         description: '「コマ＝枠線」という考えは多くな漫画表現に適応できないことは広く認められている。「フレームの不確定性」や「上位のコマ集合」などの概念が枠線以外の空間の単位を提示したものの、その階層的構造の中心には定義しがたい「コマ」が依然と据えている。本論は「コマ」という空間認知の結果から遡るのでなく、読み手がいかに紙面の空間を認知するかというアプローチを試みる。まず読み手の能動性と紙面空間（どの範囲が１つの塊になっているかと表す紙面の状態）の連続性を考察するうえで、認知心理学の「注意」概念とその特徴を手がかりに、動的且つ局所的に空間構造が生成／更新され、豊かで自由な表現が生まれるプロセスをモデル化する。',
+        spawnAngle: -70,
     },
     {
         id: 'photo',

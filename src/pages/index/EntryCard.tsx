@@ -11,7 +11,7 @@ export function EntryCard({
 }) {
     const item = useLayoutStore(state => state.layoutItems.find(i => i.id == id));
 
-    if (item == undefined) return;
+    if (item == undefined || !item.spawned) return;
 
     // <DebugRepelArrow repel={{ x: item.repelX, y: item.repelY }} />
     return (<>
@@ -125,10 +125,21 @@ export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
     const mouse = useLayoutStore(s => s.mouse);
     const cam = useLayoutStore(s => s.camera);
     const viewportSize = useLayoutStore(s => s.viewportSize);
+    const spawnRandomItemByCategory = useLayoutStore(s => s.spawnRandomItemByCategory);
+    const canSpawnEssay = useLayoutStore(s => s.hasUnspawnedItemByCategory('essay'));
+    const canSpawnDev = useLayoutStore(s => s.hasUnspawnedItemByCategory('dev'));
+    const canSpawnManga = useLayoutStore(s => s.hasUnspawnedItemByCategory('manga'));
     const eyeMove = {
         x: viewportSize.w == 0 ? 0 : (Math.max(-1, Math.min(1, (mouse.x + cam.x) / viewportSize.w)) - 0.5) * 5,
         y: viewportSize.h == 0 ? 0 : (Math.max(-1, Math.min(1, (mouse.y + cam.y) / viewportSize.h)) - 0.5) * 4,
     }
+    const spawnFromSelf = React.useCallback((category: LayoutItem['category']) => {
+        spawnRandomItemByCategory(category, item.id);
+    }, [item.id, spawnRandomItemByCategory]);
+    const getSpawnButtonStyle = (enabled: boolean): React.CSSProperties => ({
+        opacity: enabled ? 1 : 0.35,
+        pointerEvents: enabled ? 'auto' : 'none',
+    });
 
     return (
         <div
@@ -216,9 +227,9 @@ export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
                 right: 0, bottom: '4%',
                 display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
             }}>
-                <a className={styles.dialogOption}> Essay </a>
-                <a className={styles.dialogOption}> Dev proj </a>
-                <a className={styles.dialogOption}> Manga </a>
+                <a className={styles.dialogOption} style={getSpawnButtonStyle(canSpawnEssay)} onClick={(e) => { e.preventDefault(); spawnFromSelf('essay'); }}> Essay </a>
+                <a className={styles.dialogOption} style={getSpawnButtonStyle(canSpawnDev)} onClick={(e) => { e.preventDefault(); spawnFromSelf('dev'); }}> Dev proj </a>
+                <a className={styles.dialogOption} style={getSpawnButtonStyle(canSpawnManga)} onClick={(e) => { e.preventDefault(); spawnFromSelf('manga'); }}> Manga </a>
             </div>
         </div >
     );
@@ -315,7 +326,7 @@ export function LinkCard({ item, dragging }: { item: LayoutItem; dragging: boole
                     position: 'absolute',
                     width: '100%', height: '100%',
                     minWidth: 0, minHeight: 0,
-                    background: 'red',
+                    background: 'white',
                     margin: 0,
                     boxSizing: 'border-box',
                     color: 'black',

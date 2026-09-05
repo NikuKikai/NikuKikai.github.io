@@ -14,7 +14,7 @@ export type Bounds = {
 
 
 type CardType = 'info' | 'book' | 'cd' | 'link' | 'web' | 'room' | 'text';
-type Category = 'manga' | 'link' | 'essay';
+type Category = 'manga' | 'link' | 'essay' | 'dev';
 
 
 export type CanvasEntry = {
@@ -38,10 +38,12 @@ export type CanvasEntry = {
     fixed?: boolean;
     fixedPosition?: { x: number; y: number };
     attractStrength?: number;
+    spawnAngle?: number;
 };
 
 // Layout items keep both content fields and persistent runtime state in one shape.
 export type LayoutItem = CanvasEntry & {
+    spawned: boolean;
     targetScale: number;
     w: number;
     h: number;

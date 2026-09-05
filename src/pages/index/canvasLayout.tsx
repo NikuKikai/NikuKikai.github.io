@@ -72,7 +72,7 @@ export function CanvasLayout({
     forceOptions,
     scaleLerp = 0.2,
 }: CanvasForceLayoutProps) {
-    const itemIds = useLayoutStore(useShallow((state) => state.layoutItems.map((item) => item.id)));
+    const itemIds = useLayoutStore(useShallow((state) => state.layoutItems.filter((item) => item.spawned).map((item) => item.id)));
     const setMouse = useLayoutStore(state => state.setMouse);
     const setStoreCamera = useLayoutStore(state => state.setCamera);
     const setViewportSize = useLayoutStore(state => state.setViewportSize);
@@ -80,7 +80,7 @@ export function CanvasLayout({
     const updateLayoutMotion = useLayoutStore((state) => state.updateLayoutMotion);
     const setItemSize = useLayoutStore((state) => state.setItemSize);
 
-    const [bounds, setBounds] = React.useState<Bounds>(() => computeWorldBounds(useLayoutStore.getState().layoutItems, worldPadding));
+    const [bounds, setBounds] = React.useState<Bounds>(() => computeWorldBounds(useLayoutStore.getState().layoutItems.filter((item) => item.spawned), worldPadding));
 
     const boundsRef = React.useRef(bounds);
     const viewportRef = React.useRef<HTMLDivElement>(null);
@@ -132,7 +132,7 @@ export function CanvasLayout({
 
     React.useEffect(() => {
         const tick = () => {
-            const layoutItems = useLayoutStore.getState().layoutItems;
+            const layoutItems = useLayoutStore.getState().layoutItems.filter((item) => item.spawned);
 
             // Update motion
             engineRef.current.step(layoutItems, updateLayoutMotion);
