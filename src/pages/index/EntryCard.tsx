@@ -213,12 +213,12 @@ export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
             <div style={{
                 position: 'absolute',
                 width: '45%', height: '50%',
-                right: 0, bottom: '5%',
+                right: 0, bottom: '4%',
                 display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                gap: '4px',
             }}>
-                <a className={styles.dialogOption}> Essay. </a>
-                <a className={styles.dialogOption}> Manga. </a>
+                <a className={styles.dialogOption}> Essay </a>
+                <a className={styles.dialogOption}> Dev proj </a>
+                <a className={styles.dialogOption}> Manga </a>
             </div>
         </div >
     );
@@ -238,7 +238,9 @@ export function BookCard({ item, dragging }: { item: LayoutItem; dragging: boole
                 borderBottomLeftRadius: '3%',
                 background: 'black',
             }}>
-                <div style={{ position: 'relative', display: 'flex', flex: 1, minHeight: 0, minWidth: 0, overflow: 'hidden', justifyContent: 'center', alignItems: 'center', filter: 'blur(2px)', }}>
+                <div style={{
+                    position: 'relative', display: 'flex', flex: 1, minHeight: 0, minWidth: 0, overflow: 'hidden', justifyContent: 'center', alignItems: 'center', filter: 'blur(2px)',
+                }}>
                     {item.img && (
                         <img src={item.img} alt={item.title} style={{
                             width: `${imgScale}%`, height: `${imgScale}%`,
@@ -247,13 +249,16 @@ export function BookCard({ item, dragging }: { item: LayoutItem; dragging: boole
                             // filter: 'blur(2px)',
                         }} />
                     )}
+                    {/* White frame */}
                     <div style={{
                         position: 'absolute', width: '92%', height: '90%',
                         border: '2px solid white', boxSizing: 'border-box',
                     }} />
                 </div>
+                {/* Border */}
                 <div style={{
-                    position: 'absolute', width: '100%', height: '100%', boxSizing: 'border-box',
+                    position: 'absolute', width: '100%', height: '100%',
+                    boxSizing: 'border-box',
                     border: '3px black solid',
                     borderTopLeftRadius: '3%',
                     borderBottomLeftRadius: '3%',
@@ -261,6 +266,7 @@ export function BookCard({ item, dragging }: { item: LayoutItem; dragging: boole
                 }} />
             </div>
 
+            {/* Title */}
             <div style={{
                 position: 'absolute',
                 width: '80%', height: '70%', left: '10%',
@@ -275,21 +281,20 @@ export function BookCard({ item, dragging }: { item: LayoutItem; dragging: boole
                 <p style={{ flex: 1 }} />
             </div>
 
+            {/* Label */}
             <div style={{
                 position: 'absolute',
-                height: 'calc(24%)', width: '104%',
-                bottom: '3%', marginLeft: '-2%',
+                height: '24%', width: 'calc(100% - 9px)',
+                bottom: '3%', marginLeft: '3px',
                 background: 'white',
                 boxSizing: 'border-box',
                 display: 'flex', justifyContent: 'center', alignItems: 'center',
                 padding: `${4 * s}px`,
-                // fontWeight: 'bold',
-                color: '#666',
+                fontWeight: 'bold',
+                color: '#aaa',
                 letterSpacing: '1%',
                 fontSize: `${14 * s}px`,
-                border: '3px black solid',
-                // borderLeftWidth: '1px',
-                // borderRightWidth: '1px',
+                // border: '3px black solid',
             }}>
                 {item.description}
             </div>
@@ -682,6 +687,23 @@ export function TextCard({ item, dragging }: { item: LayoutItem; dragging: boole
                 <p style={{ margin: 0, marginTop: '5px', fontSize: '10px' }}>
                     {item.description}
                 </p>
+            </div>
+            <div style={{
+                position: 'absolute',
+                width: 'calc(100% - 8px)', left: '4px',
+                height: scalable.hovered ? '50px' : 0, bottom: '4px',
+                transition: '300ms ease',
+                background: 'linear-gradient(to bottom, transparent 0%, white 60%)',
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'flex-end',
+                overflow: 'hidden',
+            }}>
+                <span style={{
+                    writingMode: 'vertical-rl', letterSpacing: '-8px',
+                    marginBottom: '8px', fontSize: '14px',
+                }}>
+                    ・・・
+                </span>
             </div>
         </ScalableDivA>
     );
