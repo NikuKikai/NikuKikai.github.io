@@ -5,6 +5,7 @@ export const ENTRIES: CanvasEntry[] = [
     {
         id: 'profile',
         title: 'NIKUKIKAI',
+        showAtStart: true,
         href: '#',
         cardType: 'info',
         category: 'link',
@@ -84,8 +85,20 @@ export const ENTRIES: CanvasEntry[] = [
         img: '/assets/web/rhythm-geo.png',
     },
     {
+        id: 'manga-space',
+        title: '漫画の紙面における動的空間構造',
+        href: '/essays/manga-space',
+        target: '_blank',
+        cardType: 'text',
+        category: 'essay',
+        baseWidth: 180,
+        baseHeight: 64,
+        description: '「コマ＝枠線」という考えは多くな漫画表現に適応できないことは広く認められている。「フレームの不確定性」や「上位のコマ集合」などの概念が枠線以外の空間の単位を提示したものの、その階層的構造の中心には定義しがたい「コマ」が依然と据えている。本論は「コマ」という空間認知の結果から遡るのでなく、読み手がいかに紙面の空間を認知するかというアプローチを試みる。まず読み手の能動性と紙面空間（どの範囲が１つの塊になっているかと表す紙面の状態）の連続性を考察するうえで、認知心理学の「注意」概念とその特徴を手がかりに、動的且つ局所的に空間構造が生成／更新され、豊かで自由な表現が生まれるプロセスをモデル化する。',
+    },
+    {
         id: 'photo',
         title: 'PHOTO',
+        showAtStart: true,
         href: 'https://photohito.com/user/159218/',
         target: '_blank',
         cardType: 'link',
@@ -97,6 +110,7 @@ export const ENTRIES: CanvasEntry[] = [
     {
         id: 'blog',
         title: 'BLOG',
+        showAtStart: true,
         href: 'https://nikukikai.hatenablog.jp/',
         target: '_blank',
         cardType: 'link',
@@ -105,5 +119,18 @@ export const ENTRIES: CanvasEntry[] = [
         baseHeight: 64,
         subtitle: 'CHN',
         description: 'Longer Chinese writing.'
-    }
+    },
+    {
+        id: 'x',
+        title: 'X',
+        showAtStart: true,
+        href: 'https://x.com/NikuKikai',
+        target: '_blank',
+        cardType: 'link',
+        category: 'link',
+        baseWidth: 64,
+        baseHeight: 64,
+        subtitle: 'CHN',
+        description: 'Longer Chinese writing.'
+    },
 ];

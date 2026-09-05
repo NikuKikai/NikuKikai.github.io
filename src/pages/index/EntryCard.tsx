@@ -21,13 +21,18 @@ export function EntryCard({
         {item.cardType === 'web' && <WebCard item={item} dragging={dragging} />}
         {item.cardType === 'link' && <LinkCard item={item} dragging={dragging} />}
         {item.cardType === 'room' && <RoomCard item={item} dragging={dragging} />}
+        {item.cardType === 'text' && <TextCard item={item} dragging={dragging} />}
     </>);
 }
 
 function useScalable({
     item,
+    targetScale = 1.6,
+    scaleHandler,
 }: {
     item: LayoutItem,
+    targetScale?: number,
+    scaleHandler?: (item: LayoutItem, s: number) => Partial<LayoutItem>,
 }) {
     const updateItem = useLayoutStore((state) => state.updateItem);
     const setItemTargetScale = useLayoutStore((state) => state.setItemTargetScale);
@@ -44,7 +49,13 @@ function useScalable({
                 // Scale interpolation stays in the same runtime items as physics so size changes remain continuous.
                 s = s + (it.targetScale - s) * 0.2;
                 s = Math.abs(it.targetScale - s) < 0.001 ? it.targetScale : s;
-                updateItem(it.id, { w: it.baseWidth * s, h: it.baseHeight * s, scale: s });
+                if (!scaleHandler) {
+                    updateItem(it.id, { w: it.baseWidth * s, h: it.baseHeight * s, scale: s });
+                }
+                else {
+                    const patch = scaleHandler(it, s);
+                    updateItem(it.id, { scale: s, ...patch });
+                }
             }
             animationRef.current = window.requestAnimationFrame(tick);
         };
@@ -56,13 +67,13 @@ function useScalable({
                 window.cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [updateItem, item.id]);
+    }, [updateItem, item.id, scaleHandler]);
 
     const onPointerEnter = React.useCallback((h: boolean) => {
         if (item == undefined) return;
-        setItemTargetScale(item.id, (item.fixed || !h) ? 1 : 1.6);
+        setItemTargetScale(item.id, (item.fixed || !h) ? 1 : targetScale);
         setHovered(h);
-    }, [setItemTargetScale, item]);
+    }, [setItemTargetScale, item, targetScale]);
 
     return {
         style: {
@@ -77,6 +88,7 @@ function useScalable({
         hovered,
     }
 }
+
 function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove, hovered, dragging, children }: {
     item: LayoutItem, style: React.CSSProperties,
     onPointerEnter: () => void, onPointerLeave: () => void, onMouseMove?: (e: React.MouseEvent) => void,
@@ -140,6 +152,24 @@ export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
                     fontFamily: 'system-ui'
                 }}>NIKUKIKAI</span>
             </div>
+
+            <div style={{
+                position: 'absolute',
+                width: '55%', height: '30%',
+                right: '4%', top: '28%',
+                display: 'flex', flexDirection: 'column',
+                gap: '4px',
+            }}>
+                <span className={styles.dialog} style={{
+                    borderRadius: '15px',
+                    textAlign: 'right',
+                    paddingRight: '6px',
+                    background: 'none',
+                    color: 'white',
+                    borderColor: 'white',
+                }}> What do u want? </span>
+            </div>
+
             <img
                 src='/assets/avatar.png'
                 alt='Profile'
@@ -149,6 +179,8 @@ export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
                     objectFit: 'contain',
                     padding: '4px', paddingTop: '0px', boxSizing: 'border-box',
                 }}
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
             />
             <img
                 src='/assets/avatar_eyeL.png'
@@ -159,7 +191,10 @@ export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
                     objectFit: 'contain',
                     padding: '4px', paddingTop: '0px', boxSizing: 'border-box',
                     transform: `translate(${eyeMove.x}px, ${eyeMove.y + 1}px)`,
+                    userSelect: 'none',
                 }}
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
             />
             <img
                 src='/assets/avatar_eyeR.png'
@@ -170,17 +205,20 @@ export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
                     objectFit: 'contain',
                     padding: '4px', paddingTop: '0px', boxSizing: 'border-box',
                     transform: `translate(${eyeMove.x + 2}px, ${eyeMove.y}px)`,
+                    userSelect: 'none',
                 }}
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
             />
             <div style={{
-                position: 'absolute', right: 0, bottom: 0,
-                display: 'flex', flexDirection: 'column', paddingLeft: '12px', paddingTop: '4px', flex: 1
+                position: 'absolute',
+                width: '45%', height: '50%',
+                right: 0, bottom: '5%',
+                display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+                gap: '4px',
             }}>
-                <div style={{ display: 'flex', flex: 1, gap: '0.5em', padding: '6px 8px', justifyContent: 'flex-end', alignContent: 'flex-end', flexWrap: 'wrap' }}>
-                    <a className={styles.button} target='_blank' href='https://x.com/NikuKiKai'>
-                        <svg stroke="white" fill="white" strokeWidth="0" viewBox="0 0 448 512" height="44px" width="44px" xmlns="http://www.w3.org/2000/svg"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z"></path></svg>
-                    </a>
-                </div>
+                <a className={styles.dialogOption}> Essay. </a>
+                <a className={styles.dialogOption}> Manga. </a>
             </div>
         </div >
     );
@@ -608,8 +646,9 @@ export function RoomCard({ item, dragging }: { item: LayoutItem; dragging: boole
                     alignItems: 'center', justifyContent: 'center',
                     color: 'white', fontSize: '64px',
                     opacity: scalable.hovered ? 0 : 1,
-                    letterSpacing: scalable.hovered? '200px': 0,
+                    letterSpacing: scalable.hovered ? '200px' : 0,
                     transition: '400ms ease',
+                    pointerEvents: 'none',
                 }}>
                     <span>{item.title}</span>
                 </div>
@@ -617,3 +656,34 @@ export function RoomCard({ item, dragging }: { item: LayoutItem; dragging: boole
         </ScalableDivA >
     );
 }
+
+
+export function TextCard({ item, dragging }: { item: LayoutItem; dragging: boolean }) {
+    const scaleHandler = React.useCallback((it: LayoutItem, s: number) => {
+        const h = it.baseHeight * s;
+        const y = it.y + (h - it.h) / 2;
+        return { h, y };
+    }, []);
+
+    const scalable = useScalable({
+        item,
+        targetScale: 1.414 / (item.baseHeight / item.baseWidth),
+        scaleHandler,
+    });
+
+    return (
+        <ScalableDivA {...scalable} item={item} dragging={dragging}>
+            <div className={`${styles.entryFrame}`} style={{
+                background: 'white', overflow: 'hidden', padding: '3px',
+            }}>
+                <p style={{ fontWeight: 'bold', margin: 0, textAlign: 'center' }}>
+                    {item.title}
+                </p>
+                <p style={{ margin: 0, marginTop: '5px', fontSize: '10px' }}>
+                    {item.description}
+                </p>
+            </div>
+        </ScalableDivA>
+    );
+}
+

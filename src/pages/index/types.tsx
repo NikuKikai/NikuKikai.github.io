@@ -13,7 +13,7 @@ export type Bounds = {
 };
 
 
-type CardType = 'info' | 'book' | 'cd' | 'link' | 'web' | 'room';
+type CardType = 'info' | 'book' | 'cd' | 'link' | 'web' | 'room' | 'text';
 type Category = 'manga' | 'link' | 'essay';
 
 
@@ -21,6 +21,7 @@ export type CanvasEntry = {
     id: string;
     cardType: CardType;
     category: Category;
+    showAtStart?: boolean;
 
     // Content
     title: string;
