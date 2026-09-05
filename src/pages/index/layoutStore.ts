@@ -37,7 +37,7 @@ function createLayoutItems(items: CanvasEntry[]): LayoutItem[] {
     return layoutItems;
 }
 
-export const useLayoutStore = create<LayoutState>((set) => ({
+export const useLayoutStore = create<LayoutState>((set, get) => ({
     layoutItems: createLayoutItems(ENTRIES),
     mouse: { x: 0, y: 0 },
     camera: { x: 0, y: 0 },
@@ -76,6 +76,6 @@ export const useLayoutStore = create<LayoutState>((set) => ({
         ...state,
         viewportSize: { w, h },
     })),
-    getItemIds: () => useLayoutStore.getState().layoutItems.map((item) => item.id),
-    getItemCount: () => useLayoutStore.getState().layoutItems.length,
+    getItemIds: () => get().layoutItems.map((item) => item.id),
+    getItemCount: () => get().layoutItems.length,
 }));

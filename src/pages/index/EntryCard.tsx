@@ -1,5 +1,4 @@
 import React from 'react';
-import { DebugRepelArrow } from './debugArrow';
 import styles from './index.module.css';
 import { type LayoutItem } from './types';
 import { useLayoutStore } from './layoutStore';
@@ -110,7 +109,7 @@ function ScalableDivA({ item, style, onPointerEnter, onPointerLeave, onMouseMove
     )
 }
 
-export function InfoCard({ item, dragging }: { item: LayoutItem; dragging: boolean }) {
+export function InfoCard({ item }: { item: LayoutItem; dragging: boolean }) {
     const mouse = useLayoutStore(s => s.mouse);
     const cam = useLayoutStore(s => s.camera);
     const viewportSize = useLayoutStore(s => s.viewportSize);
@@ -465,7 +464,6 @@ export function WebCard({ item, dragging }: { item: LayoutItem; dragging: boolea
 
 export function RoomCard({ item, dragging }: { item: LayoutItem; dragging: boolean }) {
     const scalable = useScalable({ item });
-    const s = item.scale ?? 1;
     const frameRef = React.useRef<HTMLDivElement>(null);
     const sceneRef = React.useRef<HTMLDivElement>(null);
     const leftWallRef = React.useRef<HTMLDivElement>(null);
