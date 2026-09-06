@@ -507,7 +507,7 @@ export function WebCard({ item, dragging }: { item: LayoutItem; dragging: boolea
                         background: `rgba(255, 255, 255, ${0.7 + (s - 1) / 2})`,
                         boxShadow: '0px 0px 25px rgba(255, 255, 255, 0.5)',
                     }}>
-                        <span style={{ fontSize: `130%`, padding: '2%', letterSpacing: '2px', height: '50%' }}>{item.title}</span>
+                        <span style={{ fontSize: `110%`, padding: '2%', letterSpacing: '2px', height: '50%' }}>{item.title}</span>
                         <span style={{ fontSize: `${10 * s}px`, padding: '5%', flex: 1 }}>{item.description}</span>
                     </div>
                 </div>
